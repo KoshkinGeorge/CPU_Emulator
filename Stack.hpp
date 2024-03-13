@@ -96,7 +96,7 @@ public:
 
 
 template<typename T>
-void Stack<T>::raiseEmptyStackError()
+void Stack<T>::raise_empty_stack_error()
 {
     std::string message = std::string("Attempt to get the element from the empty stack in file ") +
     __FILE__ + "\nfunction: " + __func__ + "\nLine: " + std::to_string(__LINE__);
