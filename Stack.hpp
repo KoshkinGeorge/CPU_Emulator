@@ -125,7 +125,7 @@ public:
 
 
 template<typename T>
-void Stack<T>::raise_empty_stack_error()
+inline void Stack<T>::raise_empty_stack_error()
 {
     std::string message = std::string("Attempt to get the element from the empty stack in file ") +
     __FILE__ + "\nfunction: " + __func__ + "\nLine: " + std::to_string(__LINE__);
@@ -133,7 +133,7 @@ void Stack<T>::raise_empty_stack_error()
 }
 
 template<typename T>
-void Stack<T>::raise_full_stack_error()
+inline void Stack<T>::raise_full_stack_error()
 {
     std::string message = std::string("Run out of stack memory in file ") +
     __FILE__ + "\nfunction: " + __func__ + "\nLine: " + std::to_string(__LINE__);
