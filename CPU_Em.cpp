@@ -78,6 +78,33 @@ void CPU_Em::exec(std::string in_file)
                     }
                     (this->*func)(arg);
                 }
+                else if (lexeme == "REPEAT")
+                {
+                    unsigned count;
+                    if (!(programm >> count)) 
+                    {
+                        raise_error(std::string("Expected an argument for ") + lexeme + " function");
+                    }
+                    std::string cycle_body;
+                    programm >> cycle_body;
+                    
+                    if (commands_0.count(cycle_body) == 1) // if this command takes no arguments
+                    {
+                        auto func = commands_0[cycle_body];
+                        repeat(count, func);
+                    }
+                    else if (commands_1.count(cycle_body) == 1)
+                    {
+                        auto func = commands_1[cycle_body];
+                        std::string arg;
+                        if (!(programm >> arg)) 
+                        {
+                            raise_error(std::string("Expected an argument for ") + cycle_body + " function");
+                        }
+                        repeat(count, func, arg);
+                    }
+
+                }
             }
             catch(int exception_code)
             {

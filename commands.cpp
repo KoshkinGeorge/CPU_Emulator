@@ -149,3 +149,22 @@ void CPU_Em::popr(std::string arg)
     }
     print(std::string("POPR") + arg + " command complited!\n");
 }
+
+
+
+void CPU_Em::repeat(unsigned count, void (CPU_Em::*f)())
+{
+    for (unsigned i = 0; i < count; i++)
+    {
+        (this->*f)();
+    }
+}
+
+//  repeat function overloading for command_1 case
+void CPU_Em::repeat(unsigned count, void (CPU_Em::*f)(std::string arg), std::string argument)
+{
+    for (unsigned i = 0; i < count; i++)
+    {
+        (this->*f)(argument);
+    }
+}

@@ -54,6 +54,12 @@ private:
 
     void popr(std::string);
 
+
+    //  repeat command - the special one
+    void repeat(unsigned count, void (CPU_Em::*f)());
+
+    void repeat(unsigned count, void (CPU_Em::*f)(std::string arg), std::string argument);
+
 inline void file_not_found_error(std::string file_name)
 {
     errstream << "Trying to open an unexisting file" << file_name <<
