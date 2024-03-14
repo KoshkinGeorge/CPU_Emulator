@@ -1,0 +1,10 @@
+Arithmetic errors:
+    101 - Division by zero
+
+Logic errors:
+    201 - Trying to get an element from the empty stack
+
+Runtime errors:
+    301 - No input given
+    302 - Memory for stack exceeded
+    303 - Invalid argument given

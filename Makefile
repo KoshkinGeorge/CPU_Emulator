@@ -1,17 +1,16 @@
 CC = g++
-CFlags = -c
-SOURCE = main.cpp CPU_Em.cpp
-OBJECTS = ${SOURCE:.cpp=.o}
+CFlags = -c -Wall
+SOURCES = main.cpp CPU_Em.cpp commands.cpp
+OBJECTS = ${SOURCES:.cpp=.o}
 EXECUTABLE = CPU_Em
 
 all: ${EXECUTABLE}
-	./$<
 
-%o: %cpp
+%.o: %.cpp
 	${CC} ${CFlags} $< -o $@
 
 ${EXECUTABLE}: ${OBJECTS}
-	${CC} $^ -o ${EXECUTABLE}
+	${CC} $^ -o $@
 
 clean:
-	del -rf *.o ${EXECUTABLE}.exe *.txt
+	del -rf *.o ${EXECUTABLE}.exe out.txt err.txt

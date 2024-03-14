@@ -9,9 +9,9 @@
 template <class T> 
 class Stack
 {
-//  private type fields
+//  public type fields
 
-private:
+public:
     struct nod 
     {
         nod* next;
@@ -50,7 +50,9 @@ public:
     Stack(const Stack &ins)
     {
         *this = ins;
-        std::cout << "Copying constructor";
+        #ifndef NDEBUG
+        std::cout << "Copying constructor\n";
+        #endif
     }
     
     //  moving constructor
@@ -74,7 +76,7 @@ public:
         return size;
     }
 
-    inline void push(T new_value)
+    inline void push(T& new_value)
     {
         if (size + 1 > max_size)
         {
@@ -91,12 +93,14 @@ public:
         {
             raise_full_stack_error();
         }
-        nod *new_nod{new nod{new_value, top}};
+        nod *new_nod = new nod;
+        new_nod->next = top;
+        new_nod->value = new_value;
         top = new_nod;
         ++size;
     }
 
-    T get_top();
+    Stack<T>::nod* get_top();
 
     void pop();
 
@@ -147,14 +151,18 @@ Stack<T>::Stack(Stack<T>&& ins)
     size = ins.size;
     max_size = ins.max_size;
     ins.top = nullptr;
+    #ifndef NDEBUG
     std::cout << "Moving constructor\n";
+    #endif
 }
 
 template<typename T>
 Stack<T>::~Stack()
 {
     clear();
+    #ifndef NDEBUG
     std::cout << "Stack cleared!\n";
+    #endif
 }
 template<typename T>
 Stack<T>& Stack<T>::operator=(const Stack<T>& ins)
@@ -185,18 +193,20 @@ Stack<T>& Stack<T>::operator=(Stack<T>&& ins)
     size = ins.size;
     max_size = ins.max_size;
     ins.top = nullptr;
-    std::cout << "Moving constructor";
+    #ifndef NDEBUG
+    std::cout << "Moving constructor\n";
+    #endif
     return *this;
 }
 
 template<typename T>
-T Stack<T>::get_top()
+typename Stack<T>::nod* Stack<T>::get_top()
 {
     if (size <= 0)
     {
         raise_empty_stack_error();
     }
-    return top->value;
+    return top;
 }
 
 template<typename T>
@@ -228,7 +238,7 @@ std::ostream& Stack<T>::print(std::ostream & out)
 {
     for (Stack<T>::nod* cur = top; cur != nullptr; cur=cur->next)
     {
-        out << "\n\t\t\t\t|\t" << cur->value << "\t|\n";
+        out << "\n\t\t\t\t|\t" << cur->value << "\t|\n" << std::endl;
     }
     return out;
 }
