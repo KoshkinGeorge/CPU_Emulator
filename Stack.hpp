@@ -14,8 +14,9 @@ class Stack
 private:
     struct nod 
     {
-        T value;
         nod* next;
+        T value;
+
     };
 
 //  private fields
@@ -23,10 +24,13 @@ private:
 private:
     nod *top=nullptr;
     size_t size=0;
+    size_t max_size=0;
 
 //  private methods
 private:
-    void raiseEmptyStackError();
+    void raise_empty_stack_error();
+
+    void raise_full_stack_error();
 
 //  public fields
 public:
@@ -36,6 +40,11 @@ public:
 public:
     //  default constractor
     Stack() = default;
+
+    Stack(size_t bytes_given):
+        max_size((bytes_given - 3 * sizeof(size_t)) / sizeof(nod)) {}
+        // самому стеку надо 3 * sizeof(size_t) байт памяти + каждому
+        // элементу стека надо по sizeof(nod)
     
     //copying constractor
     Stack(const Stack &ins)
@@ -67,13 +76,21 @@ public:
 
     inline void push(T new_value)
     {
-        nod *new_nod{new nod{new_value, top}};
+        if (size + 1 > max_size)
+        {
+            raise_full_stack_error();
+        }
+        nod *new_nod{new nod{top, new_value}};
         top = new_nod;
         ++size;
     }
 
     inline void push(T&& new_value)
     {
+        if (size + 1 > max_size)
+        {
+            raise_full_stack_error();
+        }
         nod *new_nod{new nod{new_value, top}};
         top = new_nod;
         ++size;
@@ -84,6 +101,18 @@ public:
     void pop();
 
     void clear();
+
+    inline void set_max_size(size_t new_max_size)
+    {
+        if (size > new_max_size)
+        {
+            raise_full_stack_error();
+        }
+        else
+        {
+            max_size = new_max_size;
+        }
+    }
 
     #ifndef NDEBUG
 
@@ -104,10 +133,19 @@ void Stack<T>::raise_empty_stack_error()
 }
 
 template<typename T>
+void Stack<T>::raise_full_stack_error()
+{
+    std::string message = std::string("Run out of stack memory in file ") +
+    __FILE__ + "\nfunction: " + __func__ + "\nLine: " + std::to_string(__LINE__);
+    throw new std::overflow_error(message);
+}
+
+template<typename T>
 Stack<T>::Stack(Stack<T>&& ins)
 {
     top = ins.top;
     size = ins.size;
+    max_size = ins.max_size;
     ins.top = nullptr;
     std::cout << "Moving constructor\n";
 }
@@ -122,6 +160,7 @@ template<typename T>
 Stack<T>& Stack<T>::operator=(const Stack<T>& ins)
 {
     size = ins.size;
+    max_size = max_size;
     if (size == 0)
     {
         top = nullptr;
@@ -144,6 +183,7 @@ Stack<T>& Stack<T>::operator=(Stack<T>&& ins)
 {
     top = ins.top;
     size = ins.size;
+    max_size = ins.max_size;
     ins.top = nullptr;
     std::cout << "Moving constructor";
     return *this;
@@ -154,7 +194,7 @@ T Stack<T>::get_top()
 {
     if (size <= 0)
     {
-        raiseEmptyStackError();
+        raise_empty_stack_error();
     }
     return top->value;
 }
@@ -164,7 +204,7 @@ void Stack<T>::pop()
 {
     if (size <= 0)
     {
-        raiseEmptyStackError();
+        raise_empty_stack_error();
     }
     nod *temp = top->next;
     delete top;

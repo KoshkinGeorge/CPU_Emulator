@@ -4,7 +4,8 @@
 
 int main()
 {
-    Stack<std::string> s;
+    Stack<int> test(1024);
+    Stack<std::string> s(1024); // выделяем под стек 1024 байта
     for (std::string el : {"ba",  "ra", "ba", "sh", "ka"})
     {
         s.push(el);
