@@ -1,0 +1,9 @@
+BEGIN
+
+REPEAT 30
+    PUSH 5
+
+REPEAT 40
+    OUT
+
+END

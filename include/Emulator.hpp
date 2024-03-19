@@ -1,17 +1,17 @@
-#ifndef CPU_EM_HPP
+#ifndef Emulator_HPP
 
-#define CPU_EM_HPP
+#define Emulator_HPP
 
 #include <iostream>
 #include <fstream>
 #include <map>
 #include "Stack.hpp"
 
-class CPU_Em
+class Emulator
 {
 //  private type fields
 private:
-    using stack_ptr = Stack<unsigned>::nod*;
+    using stack_ptr = Stack<unsigned>::node*;
 //  private fields
 private:
     Stack<unsigned> stack;
@@ -21,8 +21,8 @@ private:
     std::ofstream errstream;
 
     // commands 
-    std::map<std::string, void (CPU_Em::*)()> commands_0;
-    std::map<std::string, void (CPU_Em::*)(std::string)> commands_1;
+    std::map<std::string, void (Emulator::*)()> commands_0;
+    std::map<std::string, void (Emulator::*)(std::string)> commands_1;
     std::map<std::string, unsigned> registers;
 
     bool running = false;
@@ -56,13 +56,13 @@ private:
 
 
     //  repeat command - the special one
-    void repeat(unsigned count, void (CPU_Em::*f)());
+    void repeat(unsigned count, void (Emulator::*f)());
 
-    void repeat(unsigned count, void (CPU_Em::*f)(std::string arg), std::string argument);
+    void repeat(unsigned count, void (Emulator::*f)(std::string arg), std::string argument);
 
 inline void file_not_found_error(std::string file_name)
 {
-    errstream << "Trying to open an unexisting file" << file_name <<
+    errstream << "Trying to open an unexisting file\n" << file_name <<
     std::string(" in file ") << __FILE__ << "\nfunction: " << __func__ << "\nLine: " << std::to_string(__LINE__) << std::endl;
 }
 
@@ -76,8 +76,8 @@ public:
 
 //  public methods
 public:
-    CPU_Em(std::string out_file,
-    std::string err_file, size_t bytes_for_stack=1024);
+    Emulator(std::string out_file="out.txt",
+    std::string err_file="err.txt", size_t bytes_for_stack=1024);
 
     void print(std::string mes);
 

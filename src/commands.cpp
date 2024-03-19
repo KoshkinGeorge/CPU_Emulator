@@ -1,21 +1,21 @@
 #include <iostream>
 #include "Stack.hpp"
-#include "CPU_Em.hpp"
+#include "Emulator.hpp"
 
 //  commands_0 - without args
-void CPU_Em::begin()
+void Emulator::begin()
 {
     running = true;
     print("BEGIN command complited!\n");
 }
 
-void CPU_Em::end()
+void Emulator::end()
 {
     running = false;
     print("END command complited!\n");
 }
   
-void CPU_Em::pop()
+void Emulator::pop()
 {
     try
     {
@@ -29,7 +29,7 @@ void CPU_Em::pop()
     print("END command complited!\n");
 }
   
-void CPU_Em::add()
+void Emulator::add()
 {
     stack_ptr num1 = stack.get_top();
     stack_ptr num2 = num1->next;
@@ -37,7 +37,7 @@ void CPU_Em::add()
     print("ADD command complited!\n");
 }
   
-void CPU_Em::sub()
+void Emulator::sub()
 {
     stack_ptr num1 = stack.get_top();
     stack_ptr num2 = num1->next;
@@ -45,7 +45,7 @@ void CPU_Em::sub()
     print("SUB command complited!\n");
 }
   
-void CPU_Em::mul()
+void Emulator::mul()
 {
     stack_ptr num1 = stack.get_top();
     stack_ptr num2 = num1->next;
@@ -53,7 +53,7 @@ void CPU_Em::mul()
     print("MUL command complited!\n");
 }
   
-void CPU_Em::div()
+void Emulator::div()
 {
     stack_ptr num1 = stack.get_top();
     stack_ptr num2 = num1->next;
@@ -66,7 +66,7 @@ void CPU_Em::div()
     print("DIV command complited!\n");
 }
   
-void CPU_Em::out()
+void Emulator::out()
 {   
     try
     {
@@ -82,7 +82,7 @@ void CPU_Em::out()
     print("OUT command complited!\n");
 }
 
-void CPU_Em::in()
+void Emulator::in()
 {
     try
     {
@@ -103,7 +103,7 @@ void CPU_Em::in()
 
 
 //  commands_1 - with one arg
-void CPU_Em::push(std::string arg)
+void Emulator::push(std::string arg)
 {
     try
     {
@@ -118,7 +118,7 @@ void CPU_Em::push(std::string arg)
     print(std::string("PUSH ") + arg + " command complited!\n");
 }
   
-void CPU_Em::pushr(std::string arg)
+void Emulator::pushr(std::string arg)
 {
     try
     {
@@ -134,7 +134,7 @@ void CPU_Em::pushr(std::string arg)
     print(std::string("PUSHR") + arg + " command complited!\n");
 }
 
-void CPU_Em::popr(std::string arg)
+void Emulator::popr(std::string arg)
 {
     try
     {
@@ -152,7 +152,7 @@ void CPU_Em::popr(std::string arg)
 
 
 
-void CPU_Em::repeat(unsigned count, void (CPU_Em::*f)())
+void Emulator::repeat(unsigned count, void (Emulator::*f)())
 {
     for (unsigned i = 0; i < count; i++)
     {
@@ -161,7 +161,7 @@ void CPU_Em::repeat(unsigned count, void (CPU_Em::*f)())
 }
 
 //  repeat function overloading for command_1 case
-void CPU_Em::repeat(unsigned count, void (CPU_Em::*f)(std::string arg), std::string argument)
+void Emulator::repeat(unsigned count, void (Emulator::*f)(std::string arg), std::string argument)
 {
     for (unsigned i = 0; i < count; i++)
     {

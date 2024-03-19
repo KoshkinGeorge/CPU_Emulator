@@ -1,15 +1,17 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "CPU_Em.hpp"
+#include "Emulator.hpp"
+#include "IO_dirs.hpp"
 
 using std::string;
 
 
-CPU_Em::CPU_Em(string out_file,
-string err_file, size_t bytes_for_stack):
-outstream(out_file), errstream(err_file)
+Emulator::Emulator(string out_file, string err_file, size_t bytes_for_stack):
+outstream(std::string("../") + OUTPUT_DIR + "/" + out_file),
+errstream(std::string("../") + OUTPUT_DIR + "/" + err_file)
 {
+    std::cout << std::string("../") + OUTPUT_DIR + "/" + out_file << '\n';
     stack = Stack<unsigned>(bytes_for_stack);
 
     commands_0["BEGIN"] = begin;
@@ -43,9 +45,10 @@ outstream(out_file), errstream(err_file)
     }
 }
 
-void CPU_Em::exec(std::string in_file)
-{
+void Emulator::exec(std::string programm_name)
+{   
     static unsigned counter = 1;
+    std::string in_file = std::string(INPUT_DIR) + programm_name + ".txt";
     // distinguishing marks
     errstream << "\n\n\n\n\t\t\t\t-------Programm " << counter << "---------\n\n" << std::endl;
     outstream << "\n\n\n\n\t\t\t\t-------Programm " << counter++ << "---------\n\n" << std::endl;
@@ -115,7 +118,7 @@ void CPU_Em::exec(std::string in_file)
     }
 }
 
-void CPU_Em::print(std::string mes)
+void Emulator::print(std::string mes)
 {
     #ifndef NDEBUG
     outstream << mes << std::endl;

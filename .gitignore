@@ -1,6 +1,3 @@
 .vscode/
-*.o
-*.exe
-err.txt
-in.txt
-out.txt
+build/
+exception_codes.txt

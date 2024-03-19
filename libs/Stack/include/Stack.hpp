@@ -5,66 +5,61 @@
 #include <vector>
 #include <assert.h>
 
-
-template <class T> 
+template <class T>
 class Stack
 {
-//  public type fields
+    //  public type fields
 
 public:
-    struct nod 
+    struct node
     {
-        nod* next;
+        node *next;
         T value;
-
     };
 
-//  private fields
+    //  private fields
 
 private:
-    nod *top=nullptr;
-    size_t size=0;
-    size_t max_size=0;
+    node *top = nullptr;
+    size_t size = 0;
+    size_t max_size = 0;
 
-//  private methods
+    //  private methods
 private:
     void raise_empty_stack_error();
 
     void raise_full_stack_error();
 
-//  public fields
+    //  public fields
 public:
-
-
-//  public methods
+    //  public methods
 public:
     //  default constractor
     Stack() = default;
 
-    Stack(size_t bytes_given):
-        max_size((bytes_given - 3 * sizeof(size_t)) / sizeof(nod)) {}
-        // самому стеку надо 3 * sizeof(size_t) байт памяти + каждому
-        // элементу стека надо по sizeof(nod)
-    
-    //copying constractor
+    Stack(size_t bytes_given) : max_size((bytes_given - 3 * sizeof(size_t)) / sizeof(node)) {}
+    // самому стеку надо 3 * sizeof(size_t) байт памяти + каждому
+    // элементу стека надо по sizeof(nod)
+
+    // copying constractor
     Stack(const Stack &ins)
     {
         *this = ins;
-        #ifndef NDEBUG
+#ifndef NDEBUG
         std::cout << "Copying constructor\n";
-        #endif
+#endif
     }
-    
+
     //  moving constructor
-    Stack(Stack&& ins);
+    Stack(Stack &&ins);
 
     // destructor
     ~Stack();
 
     //  some methods are defined right here - so it can be inlined in future
-    Stack& operator=(const Stack& ins);
+    Stack &operator=(const Stack &ins);
 
-    Stack& operator=(Stack&& ins);
+    Stack &operator=(Stack &&ins);
 
     inline bool empty() const
     {
@@ -76,31 +71,31 @@ public:
         return size;
     }
 
-    inline void push(T& new_value)
+    inline void push(T &new_value)
     {
         if (size + 1 > max_size)
         {
             raise_full_stack_error();
         }
-        nod *new_nod{new nod{top, new_value}};
+        node *new_nod{new node{top, new_value}};
         top = new_nod;
         ++size;
     }
 
-    inline void push(T&& new_value)
+    inline void push(T &&new_value)
     {
         if (size + 1 > max_size)
         {
             raise_full_stack_error();
         }
-        nod *new_nod = new nod;
+        node *new_nod = new node;
         new_nod->next = top;
         new_nod->value = new_value;
         top = new_nod;
         ++size;
     }
 
-    Stack<T>::nod* get_top();
+    Stack<T>::node *get_top();
 
     void pop();
 
@@ -118,54 +113,52 @@ public:
         }
     }
 
-    #ifndef NDEBUG
+#ifndef NDEBUG
 
-    std::ostream& print(std::ostream & out);
+    std::ostream &print(std::ostream &out);
 
-    #endif
-//  friends
-
+#endif
+    //  friends
 };
 
-
-template<typename T>
+template <typename T>
 inline void Stack<T>::raise_empty_stack_error()
 {
     std::string message = std::string("Attempt to get the element from the empty stack in file ") +
-    __FILE__ + "\nfunction: " + __func__ + "\nLine: " + std::to_string(__LINE__);
+                          __FILE__ + "\nfunction: " + __func__ + "\nLine: " + std::to_string(__LINE__);
     throw new std::out_of_range(message);
 }
 
-template<typename T>
+template <typename T>
 inline void Stack<T>::raise_full_stack_error()
 {
     std::string message = std::string("Run out of stack memory in file ") +
-    __FILE__ + "\nfunction: " + __func__ + "\nLine: " + std::to_string(__LINE__);
+                          __FILE__ + "\nfunction: " + __func__ + "\nLine: " + std::to_string(__LINE__);
     throw new std::overflow_error(message);
 }
 
-template<typename T>
-Stack<T>::Stack(Stack<T>&& ins)
+template <typename T>
+Stack<T>::Stack(Stack<T> &&ins)
 {
     top = ins.top;
     size = ins.size;
     max_size = ins.max_size;
     ins.top = nullptr;
-    #ifndef NDEBUG
+#ifndef NDEBUG
     std::cout << "Moving constructor\n";
-    #endif
+#endif
 }
 
-template<typename T>
+template <typename T>
 Stack<T>::~Stack()
 {
     clear();
-    #ifndef NDEBUG
+#ifndef NDEBUG
     std::cout << "Stack cleared!\n";
-    #endif
+#endif
 }
-template<typename T>
-Stack<T>& Stack<T>::operator=(const Stack<T>& ins)
+template <typename T>
+Stack<T> &Stack<T>::operator=(const Stack<T> &ins)
 {
     size = ins.size;
     max_size = max_size;
@@ -175,32 +168,33 @@ Stack<T>& Stack<T>::operator=(const Stack<T>& ins)
     }
     else
     {
-        top = new nod({ins.top->value, nullptr});
-        nod* temp = top;
-        for (const nod* cur = ins.top->next; cur != nullptr; cur = cur->next)
+        top = new node({ins.top->value, nullptr});
+        node *temp = top;
+        for (const node *cur = ins.top->next; cur != nullptr; cur = cur->next)
         {
-            temp->next = new nod({cur->value, nullptr});
+            temp->next = new node({cur->value, nullptr});
             temp = temp->next;
         }
     }
     return *this;
 }
 
-template<typename T>
-Stack<T>& Stack<T>::operator=(Stack<T>&& ins)
+template <typename T>
+Stack<T> &Stack<T>::operator=(Stack<T> &&ins)
 {
     top = ins.top;
     size = ins.size;
     max_size = ins.max_size;
     ins.top = nullptr;
-    #ifndef NDEBUG
+#ifndef NDEBUG
     std::cout << "Moving constructor\n";
-    #endif
+#endif
     return *this;
 }
 
-template<typename T>
-typename Stack<T>::nod* Stack<T>::get_top()
+// ToDo: T
+template <typename T>
+typename Stack<T>::node *Stack<T>::get_top()
 {
     if (size <= 0)
     {
@@ -209,20 +203,20 @@ typename Stack<T>::nod* Stack<T>::get_top()
     return top;
 }
 
-template<typename T>
+template <typename T>
 void Stack<T>::pop()
 {
     if (size <= 0)
     {
         raise_empty_stack_error();
     }
-    nod *temp = top->next;
+    node *temp = top->next;
     delete top;
     top = temp;
     --size;
 }
 
-template<typename T>
+template <typename T>
 void Stack<T>::clear()
 {
     while (top)
@@ -234,11 +228,12 @@ void Stack<T>::clear()
 #ifndef NDEBUG
 
 template <typename T>
-std::ostream& Stack<T>::print(std::ostream & out)
+std::ostream &Stack<T>::print(std::ostream &out)
 {
-    for (Stack<T>::nod* cur = top; cur != nullptr; cur=cur->next)
+    for (Stack<T>::node *cur = top; cur != nullptr; cur = cur->next)
     {
-        out << "\n\t\t\t\t|\t" << cur->value << "\t|\n" << std::endl;
+        out << "\n\t\t\t\t|\t" << cur->value << "\t|\n"
+            << std::endl;
     }
     return out;
 }

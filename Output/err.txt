@@ -1,0 +1,10 @@
+
+
+
+
+				-------Programm 1---------
+
+
+Trying to open an unexisting fileProgrammsFibbonachi.txt in file C:/Users/User/Desktop/George/MyProjects/CPP_Projects/CPU_Em/include/Emulator.hpp
+function: file_not_found_error
+Line: 66
