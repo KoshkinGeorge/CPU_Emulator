@@ -6,13 +6,13 @@
 void Emulator::begin()
 {
     running = true;
-    print("BEGIN command complited!\n");
+    outstream << "BEGIN command completed!\n";
 }
 
 void Emulator::end()
 {
     running = false;
-    print("END command complited!\n");
+    outstream << "END command completed!\n";
 }
   
 void Emulator::pop()
@@ -26,51 +26,60 @@ void Emulator::pop()
         errstream << e.what() << std::endl;
         throw 201;
     }
-    print("END command complited!\n");
+    outstream << "END command completed!\n";
 }
   
 void Emulator::add()
 {
-    stack_ptr num1 = stack.get_top();
-    stack_ptr num2 = num1->next;
-    stack.push(num1->value + num2->value);
-    print("ADD command complited!\n");
+    unsigned num1 = stack.get_top();
+    stack.pop();
+    unsigned num2 = stack.get_top();
+    stack.push(num1);
+    stack.push(num1 + num2);
+    outstream << "ADD command completed!\n";
 }
   
 void Emulator::sub()
 {
-    stack_ptr num1 = stack.get_top();
-    stack_ptr num2 = num1->next;
-    stack.push(num1->value - num2->value);
-    print("SUB command complited!\n");
+    unsigned num1 = stack.get_top();
+    stack.pop();
+    unsigned num2 = stack.get_top();
+    stack.push(num1);
+    stack.push(num1 - num2);
+    outstream << "SUB command completed!\n";
 }
   
 void Emulator::mul()
 {
-    stack_ptr num1 = stack.get_top();
-    stack_ptr num2 = num1->next;
-    stack.push(num1->value * num2->value);
-    print("MUL command complited!\n");
+    unsigned num1 = stack.get_top();
+    stack.pop();
+    unsigned num2 = stack.get_top();
+    stack.push(num1);
+    stack.push(num1 * num2);
+    outstream << "MUL command completed!\n";
 }
   
 void Emulator::div()
 {
-    stack_ptr num1 = stack.get_top();
-    stack_ptr num2 = num1->next;
-    if (num2->value == 0)
+    unsigned num1 = stack.get_top();
+    stack.pop();
+    unsigned num2 = stack.get_top();
+    stack.push(num1);
+    stack.push(num1 + num2);
+    if (num2 == 0)
     {
-        errstream << "Division by zero with args " << num1->value << " " << num2->value << std::endl;
+        errstream << "Division by zero with args " << num1 << " " << num2 << std::endl;
         throw 101;
     }
-    stack.push(num1->value / num2->value);
-    print("DIV command complited!\n");
+    stack.push(num1 / num2);
+    outstream << "DIV command completed!\n";
 }
   
 void Emulator::out()
 {   
     try
     {
-        unsigned num = stack.get_top()->value;
+        unsigned num = stack.get_top();
         stack.pop();
         std::cout << "You got the number from the top: " << num << std::endl;
     }
@@ -79,7 +88,7 @@ void Emulator::out()
         errstream << e.what() << std::endl;
         throw 201;
     }
-    print("OUT command complited!\n");
+    outstream << "OUT command completed!\n";
 }
 
 void Emulator::in()
@@ -98,7 +107,7 @@ void Emulator::in()
         errstream << e.what() << std::endl;
         throw 302;
     }
-    print("IN command complited!\n");
+    outstream << "IN command completed!\n";
 }
 
 
@@ -115,7 +124,7 @@ void Emulator::push(std::string arg)
         errstream << "\t" << e.what() << std::endl;
         throw 303;
     }
-    print(std::string("PUSH ") + arg + " command complited!\n");
+    outstream << "PUSH " << arg << " command completed!\n";
 }
   
 void Emulator::pushr(std::string arg)
@@ -131,14 +140,14 @@ void Emulator::pushr(std::string arg)
         errstream << e.what() << std::endl;
         throw 302;
     }
-    print(std::string("PUSHR") + arg + " command complited!\n");
+    outstream << "PUSHR " << arg << " command completed!\n";
 }
 
 void Emulator::popr(std::string arg)
 {
     try
     {
-        unsigned value = stack.get_top()->value;
+        unsigned value = stack.get_top();
         stack.pop();
         registers[arg] = value;
     }
@@ -147,7 +156,7 @@ void Emulator::popr(std::string arg)
         errstream << e.what() << std::endl;
         throw 201;
     }
-    print(std::string("POPR") + arg + " command complited!\n");
+    outstream << std::string("POPR ") << arg << " command completed!\n";
 }
 
 

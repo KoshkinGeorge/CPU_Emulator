@@ -8,9 +8,37 @@
 template <class T>
 class Stack
 {
-    //  public type fields
+    //  private type fields
 
-public:
+private:
+    class EmptyStackError : public std::exception
+    {
+    private:
+        std::string msg{};
+    public:
+        EmptyStackError(std::string message)
+            : msg(message) {}
+        
+        const char* what() const noexcept override 
+        {
+            return (std::string("Trying to get an element from the empty Stack...\n") + msg).c_str();
+        }
+    };
+
+    class FullStackError : public std::exception
+    {
+    private:
+        std::string msg{};
+    public:
+        FullStackError(std::string message)
+            : msg(message) {}
+        
+        const char* what() const noexcept override 
+        {
+            return (std::string("Memory for stack has exeeded...\n") + msg).c_str();
+        }
+    };
+
     struct node
     {
         node *next;
@@ -26,9 +54,6 @@ private:
 
     //  private methods
 private:
-    void raise_empty_stack_error();
-
-    void raise_full_stack_error();
 
     //  public fields
 public:
@@ -45,9 +70,6 @@ public:
     Stack(const Stack &ins)
     {
         *this = ins;
-#ifndef NDEBUG
-        std::cout << "Copying constructor\n";
-#endif
     }
 
     //  moving constructor
@@ -75,7 +97,7 @@ public:
     {
         if (size + 1 > max_size)
         {
-            raise_full_stack_error();
+            throw FullStackError("In push method");
         }
         node *new_nod{new node{top, new_value}};
         top = new_nod;
@@ -86,7 +108,7 @@ public:
     {
         if (size + 1 > max_size)
         {
-            raise_full_stack_error();
+            throw FullStackError("In push method");
         }
         node *new_nod = new node;
         new_nod->next = top;
@@ -95,7 +117,7 @@ public:
         ++size;
     }
 
-    Stack<T>::node *get_top();
+    T &get_top();
 
     void pop();
 
@@ -105,7 +127,7 @@ public:
     {
         if (size > new_max_size)
         {
-            raise_full_stack_error();
+            throw FullStackError("In set_max_size method");
         }
         else
         {
@@ -113,29 +135,11 @@ public:
         }
     }
 
-#ifndef NDEBUG
-
     std::ostream &print(std::ostream &out);
 
-#endif
     //  friends
 };
 
-template <typename T>
-inline void Stack<T>::raise_empty_stack_error()
-{
-    std::string message = std::string("Attempt to get the element from the empty stack in file ") +
-                          __FILE__ + "\nfunction: " + __func__ + "\nLine: " + std::to_string(__LINE__);
-    throw new std::out_of_range(message);
-}
-
-template <typename T>
-inline void Stack<T>::raise_full_stack_error()
-{
-    std::string message = std::string("Run out of stack memory in file ") +
-                          __FILE__ + "\nfunction: " + __func__ + "\nLine: " + std::to_string(__LINE__);
-    throw new std::overflow_error(message);
-}
 
 template <typename T>
 Stack<T>::Stack(Stack<T> &&ins)
@@ -144,24 +148,18 @@ Stack<T>::Stack(Stack<T> &&ins)
     size = ins.size;
     max_size = ins.max_size;
     ins.top = nullptr;
-#ifndef NDEBUG
-    std::cout << "Moving constructor\n";
-#endif
 }
 
 template <typename T>
 Stack<T>::~Stack()
 {
     clear();
-#ifndef NDEBUG
-    std::cout << "Stack cleared!\n";
-#endif
 }
 template <typename T>
 Stack<T> &Stack<T>::operator=(const Stack<T> &ins)
 {
     size = ins.size;
-    max_size = max_size;
+    max_size = ins.max_size;
     if (size == 0)
     {
         top = nullptr;
@@ -186,21 +184,18 @@ Stack<T> &Stack<T>::operator=(Stack<T> &&ins)
     size = ins.size;
     max_size = ins.max_size;
     ins.top = nullptr;
-#ifndef NDEBUG
-    std::cout << "Moving constructor\n";
-#endif
     return *this;
 }
 
 // ToDo: T
 template <typename T>
-typename Stack<T>::node *Stack<T>::get_top()
+T &Stack<T>::get_top()
 {
     if (size <= 0)
     {
-        raise_empty_stack_error();
+        throw EmptyStackError("In get_top method");
     }
-    return top;
+    return top->value;
 }
 
 template <typename T>
@@ -208,7 +203,7 @@ void Stack<T>::pop()
 {
     if (size <= 0)
     {
-        raise_empty_stack_error();
+        throw EmptyStackError("In pop method");
     }
     node *temp = top->next;
     delete top;
@@ -225,8 +220,6 @@ void Stack<T>::clear()
     }
 }
 
-#ifndef NDEBUG
-
 template <typename T>
 std::ostream &Stack<T>::print(std::ostream &out)
 {
@@ -237,7 +230,5 @@ std::ostream &Stack<T>::print(std::ostream &out)
     }
     return out;
 }
-
-#endif
 
 #endif

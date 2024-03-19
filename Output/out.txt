@@ -5,3 +5,44 @@
 				-------Programm 1---------
 
 
+BEGIN command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+PUSH 5 command completed!
+OUT command completed!
+OUT command completed!
+OUT command completed!
+OUT command completed!
+OUT command completed!
+OUT command completed!
+OUT command completed!
+OUT command completed!
+OUT command completed!
+OUT command completed!

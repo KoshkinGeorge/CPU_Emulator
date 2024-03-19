@@ -7,11 +7,39 @@
 #include <map>
 #include "Stack.hpp"
 
+
 class Emulator
 {
-//  private type fields
+//  public type fields
+public:
+    class FileNotFound : public std::exception
+    {
+    private:
+        std::string file_name{};
+    public:
+        FileNotFound(std::string filename)
+            : file_name(filename) {}
+        
+        const char* what() const noexcept override 
+        {
+            return (std::string("File ") + file_name + " is not found").c_str();
+        }
+    };
+
+    class InvalidSyntaxError : public std::exception
+    {
+    private:
+        std::string lxm{};
+    public:
+        InvalidSyntaxError(std::string lexeme)
+            : lxm(lexeme) {}
+        
+        const char* what() const noexcept override 
+        {
+            return (std::string("Invalid syntax used in programm\n") + lxm).c_str();
+        }
+    };
 private:
-    using stack_ptr = Stack<unsigned>::node*;
 //  private fields
 private:
     Stack<unsigned> stack;
@@ -62,13 +90,7 @@ private:
 
 inline void file_not_found_error(std::string file_name)
 {
-    errstream << "Trying to open an unexisting file\n" << file_name <<
-    std::string(" in file ") << __FILE__ << "\nfunction: " << __func__ << "\nLine: " << std::to_string(__LINE__) << std::endl;
-}
-
-inline void raise_error(std::string message)
-{
-    errstream << message << std::endl;
+    errstream << "Trying to open an unexisting file\n" << file_name << std::endl;
 }
 //  public fields
 public:
@@ -78,10 +100,6 @@ public:
 public:
     Emulator(std::string out_file="out.txt",
     std::string err_file="err.txt", size_t bytes_for_stack=1024);
-
-    void print(std::string mes);
-
-
 
     void exec(std::string in_file);
 //  friends

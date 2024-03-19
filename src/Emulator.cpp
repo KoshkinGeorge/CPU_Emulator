@@ -1,17 +1,18 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <exception>
 #include "Emulator.hpp"
 #include "IO_dirs.hpp"
 
 using std::string;
 
 
+
 Emulator::Emulator(string out_file, string err_file, size_t bytes_for_stack):
 outstream(std::string("../") + OUTPUT_DIR + "/" + out_file),
 errstream(std::string("../") + OUTPUT_DIR + "/" + err_file)
 {
-    std::cout << std::string("../") + OUTPUT_DIR + "/" + out_file << '\n';
     stack = Stack<unsigned>(bytes_for_stack);
 
     commands_0["BEGIN"] = begin;
@@ -41,22 +42,21 @@ errstream(std::string("../") + OUTPUT_DIR + "/" + err_file)
 
     if (!outstream || !errstream) // if failed to open one of the files
     {
-        file_not_found_error(!outstream? out_file : err_file);
+        throw FileNotFound(!outstream? out_file : err_file);
     }
 }
 
 void Emulator::exec(std::string programm_name)
 {   
     static unsigned counter = 1;
-    std::string in_file = std::string(INPUT_DIR) + programm_name + ".txt";
+    std::string in_file = std::string("../") + std::string(INPUT_DIR) + "/" + programm_name + ".txt";
     // distinguishing marks
     errstream << "\n\n\n\n\t\t\t\t-------Programm " << counter << "---------\n\n" << std::endl;
     outstream << "\n\n\n\n\t\t\t\t-------Programm " << counter++ << "---------\n\n" << std::endl;
-
     programm = std::ifstream(in_file);
     if (!programm)
     {
-        file_not_found_error(in_file);
+        throw FileNotFound(std::string("File ") + in_file + " not found!");
     }
     string lexeme;
 
@@ -77,7 +77,7 @@ void Emulator::exec(std::string programm_name)
                     std::string arg;
                     if (!(programm >> arg)) 
                     {
-                        raise_error(std::string("Expected an argument for ") + lexeme + " function");
+                        throw InvalidSyntaxError(std::string("Expected an argument for ") + lexeme + " function");
                     }
                     (this->*func)(arg);
                 }
@@ -86,7 +86,7 @@ void Emulator::exec(std::string programm_name)
                     unsigned count;
                     if (!(programm >> count)) 
                     {
-                        raise_error(std::string("Expected an argument for ") + lexeme + " function");
+                        throw InvalidSyntaxError(std::string("Expected an argument for ") + lexeme + " function");
                     }
                     std::string cycle_body;
                     programm >> cycle_body;
@@ -102,7 +102,7 @@ void Emulator::exec(std::string programm_name)
                         std::string arg;
                         if (!(programm >> arg)) 
                         {
-                            raise_error(std::string("Expected an argument for ") + cycle_body + " function");
+                            throw InvalidSyntaxError(std::string("Expected an argument for ") + lexeme + " function");
                         }
                         repeat(count, func, arg);
                     }
@@ -116,11 +116,4 @@ void Emulator::exec(std::string programm_name)
             }
         }
     }
-}
-
-void Emulator::print(std::string mes)
-{
-    #ifndef NDEBUG
-    outstream << mes << std::endl;
-    #endif
 }
