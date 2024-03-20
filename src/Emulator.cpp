@@ -15,6 +15,7 @@ errstream(std::string("../") + OUTPUT_DIR + "/" + err_file)
 {
     stack = Stack<unsigned>(bytes_for_stack);
 
+    bool inserted;
     commands_0["BEGIN"] = begin;
     commands_0["END"] = end;
     commands_0["POP"] = pop;

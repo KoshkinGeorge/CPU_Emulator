@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
+set(CMAKE_CXX_COMPILER_VERSION 16)
 set(EMULATOR_SRC_DIR "src")
 set(EMULATOR_INCLUDE_DIR "include")
 
@@ -21,21 +22,3 @@ target_include_directories(Emulator PUBLIC "${PROJECT_BINARY_DIR}")
 target_include_directories(Emulator PUBLIC "${EMULATOR_INCLUDE_DIR}")
 
 target_link_libraries(Emulator PRIVATE Stack)
-
-
-# add_executable(StackTest "test/StackTest.cpp")
-
-# target_link_libraries(StackTest gtest_main)
-
-# # Google tests
-# enable_testing()
-
-# include(FetchContent)
-# FetchContent_Declare(
-#         googletest
-#         URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-# )
-
-# # For Windows: Prevent overriding the parent project's compiler/linker settings
-# set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-# FetchContent_MakeAvailable(googletest)   
