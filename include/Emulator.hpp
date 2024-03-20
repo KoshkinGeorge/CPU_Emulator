@@ -6,6 +6,7 @@
 #include "Stack.hpp"
 #include "commands.hpp"
 #include "Preprocessor.hpp"
+#include "my_funcs.hpp"
 
 
 class Emulator
@@ -23,7 +24,7 @@ public:
         
         const char* what() const noexcept override 
         {
-            return (std::string("File ") + file_name + " is not found").c_str();
+            return to_c_str(std::string("File ") + file_name + " is not found");
         }
     };
 

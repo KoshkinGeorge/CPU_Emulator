@@ -2,6 +2,7 @@
 #include <iostream>
 #include <Stack.hpp>
 #include <map>
+#include "my_funcs.hpp"
 
 class Command
 {
@@ -9,14 +10,14 @@ public:
     class DivisionByZero : public std::exception
     {
     private:
-        std::string num1{};
+        std::string num1;
     
     public:
         DivisionByZero(const char *num): num1(num) {}
     
         const char* what() const noexcept override
         {
-            return (("Trying to devide ") + num1 + "by zero").c_str();
+            return to_c_str(("Trying to devide ") + num1 + "by zero");
         }
     };
 
@@ -24,14 +25,14 @@ public:
     class ExpectedAnArgument : public std::exception
     {
     private:
-        std::string arg_name{};
+        std::string arg_name;
     
     public:
         ExpectedAnArgument(const char *_arg_name):   arg_name(_arg_name) {}
     
         const char* what() const noexcept override
         {
-            return (("Expected: ") + arg_name + "\nGot: Nothing").c_str();
+            return to_c_str(("Expected: ") + arg_name + "\nGot: Nothing");
         }
     };
 

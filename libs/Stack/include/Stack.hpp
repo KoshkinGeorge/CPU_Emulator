@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <assert.h>
+#include "../../../include/my_funcs.hpp"
 
 template <class T>
 class Stack
@@ -27,7 +28,7 @@ public:
         
         const char* what() const noexcept override 
         {
-            return (std::string("Trying to get an element from the empty Stack...\n") + msg).c_str();
+            return to_c_str(std::string("Trying to get an element from the empty Stack...\n") + msg);
         }
     };
 
@@ -41,7 +42,7 @@ public:
         
         const char* what() const noexcept override 
         {
-            return (std::string("Memory for stack has exeeded...\n") + msg).c_str();
+            return to_c_str(std::string("Memory for stack has exeeded...\n") + msg);
         }
     };
 

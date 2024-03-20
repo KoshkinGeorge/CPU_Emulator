@@ -1,3 +1,3 @@
 Preprocessor Error:
-X»pe Programms/Fibbonachi.txt is not found! is not found
+File ../Programms/Fibbof.txt is not found is not defined
 Preprocessing determinated

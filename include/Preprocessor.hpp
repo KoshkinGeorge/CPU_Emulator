@@ -4,12 +4,14 @@
 #include <map>
 #include "IO_dirs.hpp"
 #include <fstream>
+#include "my_funcs.hpp"
 
 class Preprocessor
 {
 private:
     static std::map<std::string, unsigned> all_commands; // all the commands and amount of their arguments
     std::ofstream processed;
+
 public:
 
     class NoArgumentGiven : public std::exception
@@ -30,13 +32,14 @@ public:
     {
     private:
         std::string lxm{};
+
     public:
         UnknownCommand(std::string lexeme)
             : lxm(lexeme) {}
         
         const char* what() const noexcept override 
         {
-            return (std::string("Unknown command: ") + lxm).c_str();
+            return to_c_str(lxm + " is not defined");
         }
     };
 
@@ -50,7 +53,7 @@ public:
         
         const char* what() const noexcept override 
         {
-            return (std::string("File ") + file_name + " is not found").c_str();
+            return to_c_str(std::string("File ") + file_name + " is not found");
         }
     };
 

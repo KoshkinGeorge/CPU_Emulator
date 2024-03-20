@@ -47,7 +47,8 @@ void Emulator::preprocess(std::string programm_name)
     }  
     catch (std::exception &e)
     {
-        errstream << "Preprocessor Error:\n" << e.what() << "\nPreprocessing determinated";
+        errstream << std::string("Preprocessor Error:\n") + std::string(e.what())  << "\nPreprocessing determinated";
         return;
     }
+    outstream << programm_name << " has been processed correctly!\n";
 }

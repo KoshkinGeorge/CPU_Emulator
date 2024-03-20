@@ -25,14 +25,14 @@ std::map<string, unsigned> Preprocessor::all_commands =
 
 void Preprocessor::process_file(string file_name)
 {
-    string programm_path = std::string(INPUT_DIR) + "/" + file_name + ".txt";
+    string programm_path = string("../") + INPUT_DIR + "/" + file_name + ".txt";
     std::ifstream programm(programm_path);
-    if (!programm)
+    if (programm.fail())
     {
-        throw FileNotFound(std::string("File ") + programm_path + " is not found!");
+        throw FileNotFound(programm_path);
     }
 
-    processed = std::ofstream(string(INPUT_DIR) + "/" + file_name + ".pcs");
+    processed = std::ofstream(string("../") + INPUT_DIR + "/" + file_name + ".pcs");
 
     string lexeme;
     
@@ -40,17 +40,16 @@ void Preprocessor::process_file(string file_name)
     while(programm >> lexeme)
     {
         if (is_running || lexeme == "BEGIN")
-        {   
+        {
             if (lexeme == "BEGIN")
             {
-                is_running == true;
+                is_running = true;
                 continue;
             }
             else if (lexeme == "END")
             {
                 break;
             }
-
             if (all_commands.count(lexeme) != 1) // if this command takes no arguments
             {
                 throw UnknownCommand(lexeme);

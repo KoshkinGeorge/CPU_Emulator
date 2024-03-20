@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
 
-set(CMAKE_CXX_COMPILER_VERSION 16)
 set(EMULATOR_SRC_DIR "src")
 set(EMULATOR_INCLUDE_DIR "include")
 
@@ -16,7 +15,8 @@ add_subdirectory("libs/Stack")
 add_executable(Emulator "${EMULATOR_SRC_DIR}/main.cpp"
                         "${EMULATOR_SRC_DIR}/Emulator.cpp"
                         "${EMULATOR_SRC_DIR}/commands.cpp"
-                        "${EMULATOR_SRC_DIR}/Preprocessor.cpp")
+                        "${EMULATOR_SRC_DIR}/Preprocessor.cpp"
+                        "${EMULATOR_SRC_DIR}/my_funcs.cpp")
 
 target_include_directories(Emulator PUBLIC "${PROJECT_BINARY_DIR}")
 

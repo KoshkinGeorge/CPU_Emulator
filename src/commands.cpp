@@ -3,6 +3,7 @@
 #include "commands.hpp"
 #include <map>
 #include <sstream>
+#include "my_funcs.hpp"
 
 //  commands_0 - without args
 
@@ -81,7 +82,7 @@ void Div::exec(State &state) const
     {
         std::ostringstream oss;
         oss << num1;
-        throw DivisionByZero(oss.str().c_str());
+        throw DivisionByZero(to_c_str(oss.str()));
     }
     state.stack.push(num1 / num2);
 }
