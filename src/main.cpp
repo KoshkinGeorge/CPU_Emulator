@@ -5,8 +5,8 @@
 
 int main(int argc, const char **argv)
 {
-    Emulator em("out.txt", "log.txt", (argc > 2)? std::stoul(argv[2]) : 1024); 
+    Emulator em((argc > 2)? std::stoul(argv[2]) : 1024); 
     
-    em.exec(argv[1]);
+    em.preprocess(argv[1]);
     return 0;
 }

@@ -1,179 +1,139 @@
 #include <iostream>
 #include "Stack.hpp"
-#include "Emulator.hpp"
+#include "commands.hpp"
+#include <map>
+#include <sstream>
 
 //  commands_0 - without args
-void Emulator::begin()
-{
-    running = true;
-    outstream << "BEGIN command completed!\n";
-}
 
-void Emulator::end()
+void Begin::exec(State &state) const
 {
-    running = false;
-    outstream << "END command completed!\n";
+    state.running = true;
 }
-  
-void Emulator::pop()
+const std::string Begin::name = "BEGIN";
+
+
+
+void End::exec(State &state) const
 {
-    try
-    {
-        stack.pop();
-    }
-    catch(std::out_of_range e)
-    {
-        errstream << e.what() << std::endl;
-        throw 201;
-    }
-    outstream << "END command completed!\n";
+    state.running = false;
 }
-  
-void Emulator::add()
+const std::string End::name = "END";
+
+
+
+
+void Pop::exec(State &state) const
 {
-    unsigned num1 = stack.get_top();
-    stack.pop();
-    unsigned num2 = stack.get_top();
-    stack.push(num1);
-    stack.push(num1 + num2);
-    outstream << "ADD command completed!\n";
+    //  all errors are being catched at the top level
+    state.stack.pop(); 
 }
-  
-void Emulator::sub()
+const std::string Pop::name = "POP";
+
+
+
+void Add::exec(State &state) const
 {
-    unsigned num1 = stack.get_top();
-    stack.pop();
-    unsigned num2 = stack.get_top();
-    stack.push(num1);
-    stack.push(num1 - num2);
-    outstream << "SUB command completed!\n";
+    state.running = true;
+    unsigned num1 = state.stack.get_top();
+    state.stack.pop();
+    unsigned num2 = state.stack.get_top();
+    state.stack.push(num1);
+    state.stack.push(num1 + num2);
 }
-  
-void Emulator::mul()
+const std::string Add::name = "ADD";
+
+
+
+void Sub::exec(State &state) const
 {
-    unsigned num1 = stack.get_top();
-    stack.pop();
-    unsigned num2 = stack.get_top();
-    stack.push(num1);
-    stack.push(num1 * num2);
-    outstream << "MUL command completed!\n";
+    unsigned num1 = state.stack.get_top();
+    state.stack.pop();
+    unsigned num2 = state.stack.get_top();
+    state.stack.push(num1);
+    state.stack.push(num1 - num2);
 }
-  
-void Emulator::div()
+const std::string Sub::name = "SUB";
+
+
+
+
+void Mul::exec(State &state) const
 {
-    unsigned num1 = stack.get_top();
-    stack.pop();
-    unsigned num2 = stack.get_top();
-    stack.push(num1);
-    stack.push(num1 + num2);
+    unsigned num1 = state.stack.get_top();
+    state.stack.pop();
+    unsigned num2 = state.stack.get_top();
+    state.stack.push(num1);
+    state.stack.push(num1 * num2);
+}
+const std::string Mul::name = "MUL";
+
+
+
+void Div::exec(State &state) const
+{
+    unsigned num1 = state.stack.get_top();
+    state.stack.pop();
+    unsigned num2 = state.stack.get_top();
+    state.stack.push(num1);
+    state.stack.push(num1 + num2);
     if (num2 == 0)
     {
-        errstream << "Division by zero with args " << num1 << " " << num2 << std::endl;
-        throw 101;
+        std::ostringstream oss;
+        oss << num1;
+        throw DivisionByZero(oss.str().c_str());
     }
-    stack.push(num1 / num2);
-    outstream << "DIV command completed!\n";
+    state.stack.push(num1 / num2);
 }
-  
-void Emulator::out()
-{   
-    try
-    {
-        unsigned num = stack.get_top();
-        stack.pop();
-        std::cout << "You got the number from the top: " << num << std::endl;
-    }
-    catch (std::out_of_range e) 
-    {
-        errstream << e.what() << std::endl;
-        throw 201;
-    }
-    outstream << "OUT command completed!\n";
-}
+const std::string Div::name = "DIV";
 
-void Emulator::in()
+
+
+void Out::exec(State &state) const
 {
-    try
-    {
-        unsigned num;
-        if (!(std::cin >> num))
-        {
-            throw 301;
-        }
-        stack.push(num);
-    }
-    catch (std::runtime_error e)
-    {
-        errstream << e.what() << std::endl;
-        throw 302;
-    }
-    outstream << "IN command completed!\n";
+    unsigned num = state.stack.get_top();
+    state.stack.pop();
+    std::cout << "You got the number from the top: " << num << std::endl;
 }
+const std::string Out::name = "OUT";
 
 
-//  commands_1 - with one arg
-void Emulator::push(std::string arg)
+
+void In::exec(State &state) const
 {
-    try
+    unsigned num;
+    if (!(std::cin >> num))
     {
-        stack.push(std::move(std::stoul(arg)));
+        throw ExpectedAnArgument("Num for IN command");
     }
-    catch (std::invalid_argument e)
-    {
-        errstream << "Unexpected argument for push function: " << arg;
-        errstream << "\t" << e.what() << std::endl;
-        throw 303;
-    }
-    outstream << "PUSH " << arg << " command completed!\n";
+    state.stack.push(num);
 }
-  
-void Emulator::pushr(std::string arg)
+const std::string In::name = "IN";
+
+
+
+void Push::exec(State &state) const
 {
-    try
-    {
-        // if user tries to get a value from random register - it would be an undefined behavior (he would be given a value left there by previous programms)
-        unsigned value = registers[arg]; 
-        stack.push(value);
-    }
-    catch (std::runtime_error e)
-    {
-        errstream << e.what() << std::endl;
-        throw 302;
-    }
-    outstream << "PUSHR " << arg << " command completed!\n";
+    state.stack.push(std::move(std::stoul(state.next_lexeme)));
 }
+const std::string Push::name = "PUSH";
 
-void Emulator::popr(std::string arg)
+
+
+void PushR::exec(State &state) const
 {
-    try
-    {
-        unsigned value = stack.get_top();
-        stack.pop();
-        registers[arg] = value;
-    }
-    catch (std::out_of_range e)
-    {
-        errstream << e.what() << std::endl;
-        throw 201;
-    }
-    outstream << std::string("POPR ") << arg << " command completed!\n";
+    // if user tries to get a value from random register - he would be given a value left there from previous programms
+    unsigned value = state.registers[state.next_lexeme]; 
+    state.stack.push(value);
 }
+const std::string PushR::name = "PUSHR";
 
 
 
-void Emulator::repeat(unsigned count, void (Emulator::*f)())
+void PopR::exec(State &state) const
 {
-    for (unsigned i = 0; i < count; i++)
-    {
-        (this->*f)();
-    }
+    unsigned value = state.stack.get_top();
+    state.stack.pop();
+    state.registers[state.next_lexeme] = value;
 }
-
-//  repeat function overloading for command_1 case
-void Emulator::repeat(unsigned count, void (Emulator::*f)(std::string arg), std::string argument)
-{
-    for (unsigned i = 0; i < count; i++)
-    {
-        (this->*f)(argument);
-    }
-}
+const std::string PopR::name = "POPR";

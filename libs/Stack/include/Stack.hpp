@@ -1,6 +1,5 @@
-#ifndef STACK_HPP
+#pragma once 
 
-#define STACK_HPP
 #include <iostream>
 #include <vector>
 #include <assert.h>
@@ -8,9 +7,16 @@
 template <class T>
 class Stack
 {
-    //  private type fields
-
+//  private type fields
 private:
+    struct node
+    {
+        node *next;
+        T value;
+    };
+
+//  public type fields
+public:
     class EmptyStackError : public std::exception
     {
     private:
@@ -39,14 +45,7 @@ private:
         }
     };
 
-    struct node
-    {
-        node *next;
-        T value;
-    };
-
     //  private fields
-
 private:
     node *top = nullptr;
     size_t size = 0;
@@ -230,5 +229,3 @@ std::ostream &Stack<T>::print(std::ostream &out)
     }
     return out;
 }
-
-#endif

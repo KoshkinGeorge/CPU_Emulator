@@ -15,7 +15,8 @@ add_subdirectory("libs/Stack")
 
 add_executable(Emulator "${EMULATOR_SRC_DIR}/main.cpp"
                         "${EMULATOR_SRC_DIR}/Emulator.cpp"
-                        "${EMULATOR_SRC_DIR}/commands.cpp")
+                        "${EMULATOR_SRC_DIR}/commands.cpp"
+                        "${EMULATOR_SRC_DIR}/Preprocessor.cpp")
 
 target_include_directories(Emulator PUBLIC "${PROJECT_BINARY_DIR}")
 
