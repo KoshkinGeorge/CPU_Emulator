@@ -42,7 +42,7 @@ private:
 
     // commands 
     std::map<std::string, unsigned> registers;
-    std::map<std::string, std::shared_ptr<Command>()> command_map;
+    // std::map<std::string, std::shared_ptr<Command>> command_map;
 
     bool running = false;
 //  private methods

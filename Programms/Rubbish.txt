@@ -1,0 +1,18 @@
+
+
+
+                 --------------      This is just a bunch of rubbish for the test purposes       ----------------
+
+
+
+
+
+babababebebe
+    foo
+BEGIN
+
+PUSH Kocherishka
+
+lorem ipsum
+
+END
