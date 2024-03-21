@@ -147,6 +147,7 @@ Stack<T>::Stack(Stack<T> &&ins)
     size = ins.size;
     max_size = ins.max_size;
     ins.top = nullptr;
+    ins.size = 0;
 }
 
 template <typename T>
@@ -165,11 +166,11 @@ Stack<T> &Stack<T>::operator=(const Stack<T> &ins)
     }
     else
     {
-        top = new node({ins.top->value, nullptr});
+        top = new node{nullptr, ins.top->value};
         node *temp = top;
         for (const node *cur = ins.top->next; cur != nullptr; cur = cur->next)
         {
-            temp->next = new node({cur->value, nullptr});
+            temp->next = new node{nullptr, cur->value};
             temp = temp->next;
         }
     }
@@ -183,6 +184,7 @@ Stack<T> &Stack<T>::operator=(Stack<T> &&ins)
     size = ins.size;
     max_size = ins.max_size;
     ins.top = nullptr;
+    ins.size = 0;
     return *this;
 }
 
