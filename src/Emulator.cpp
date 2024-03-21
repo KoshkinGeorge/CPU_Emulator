@@ -2,9 +2,13 @@
 #include <string>
 #include <fstream>
 #include <exception>
+#include <map>
+
 #include "Emulator.hpp"
 #include "IO_dirs.hpp"
 #include "Preprocessor.hpp"
+#include "commands.hpp"
+#include <memory>
 
 using std::string;
 
@@ -15,6 +19,8 @@ outstream(std::string("../") + OUTPUT_DIR + "/out.txt"),
 errstream(std::string("../") + OUTPUT_DIR + "/log.txt"),
 preprocessor()
 {
+    command_map["BEGIN"] = std::make_shared<Command>()
+
     stack = Stack<unsigned>(bytes_for_stack);
 
     registers["AX"] = 0;
@@ -31,11 +37,32 @@ preprocessor()
 
 void Emulator::exec(std::string programm_name)
 {   
-    static unsigned counter = 1;
-    std::string in_file = std::string("../") + std::string(INPUT_DIR) + "/" + programm_name + ".txt";
-    // distinguishing marks
     errstream << "\n\n\n\n\t\t\t\t------- " << programm_name << "---------\n\n" << std::endl;
     outstream << "\n\n\n\n\t\t\t\t------- " << programm_name << "---------\n\n" << std::endl;
+    
+    try
+    {
+        std::string in_file = std::string("../") + std::string(INPUT_DIR) + "/" + programm_name + ".pcs";
+        std::ifstream programm(in_file);
+        if (programm.fail())
+        {
+            throw FileNotFound(in_file);
+        }
+        std::string command, arg;
+        Command::State state(stack, registers, running, arg);
+        state.registers = registers;
+        state.stack = stack;
+        state.running = running;
+        while (programm >> command)
+        {   
+            while (programm >> state.next_lexeme && state.next_lexeme != "&") {}
+            commands[command]->exec(state);
+        }
+    }
+    catch(std::exception &e)
+    {
+        errstream << "Run-Time error\n" << e.what() << "\nStop execution...\n";
+    }
     
 }
 

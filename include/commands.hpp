@@ -2,6 +2,8 @@
 #include <iostream>
 #include <Stack.hpp>
 #include <map>
+#include <vector>
+
 #include "my_funcs.hpp"
 
 class Command
@@ -36,9 +38,7 @@ public:
         }
     };
 
-    
-
-protected:
+public:
     struct State
     {
     private:
@@ -49,8 +49,8 @@ protected:
         reg_map &registers;
         bool &running;
         std::string next_lexeme;
-        
-        State(Stack<unsigned> &s, reg_map &r, bool &run, const std::string &next_lexeme): stack(s), registers(r), running(run) {}
+
+        State(Stack<unsigned> &s, reg_map &r, bool &run, const std::string &_next_lexeme): stack(s), registers(r), running(run), next_lexeme(_next_lexeme){}
     };
 
     static const std::string name;
@@ -194,8 +194,8 @@ public:
 };
 
 
-
-/*class Begin: public Command
+/*
+class Begin: public Command
 {
 private:
     std::string name;

@@ -10,17 +10,17 @@ using command_data = std::pair<string, unsigned>;
 std::map<string, unsigned> Preprocessor::all_commands = 
 {
     command_data("BEGIN", 0),
-    command_data("END", 0),
-    command_data("PUSH", 1),
-    command_data("POP", 0),
+    command_data("END",   0),
+    command_data("PUSH",  1),
+    command_data("POP",   0),
     command_data("PUSHR", 1),
-    command_data("POPR", 1),
-    command_data("ADD", 0),
-    command_data("SUB", 0),
-    command_data("MUL", 0),
-    command_data("DIV", 0),
-    command_data("OUT", 0),
-    command_data("IN", 0)
+    command_data("POPR",  1),
+    command_data("ADD",   0),
+    command_data("SUB",   0),
+    command_data("MUL",   0),
+    command_data("DIV",   0),
+    command_data("OUT",   0),
+    command_data("IN",    0)
 };
 
 void Preprocessor::process_file(string file_name)
@@ -65,7 +65,7 @@ void Preprocessor::process_file(string file_name)
                     }
                     processed << " " << lexeme;
                 }
-                processed << "\n";
+                processed << " &\n";
             }
         }
     }

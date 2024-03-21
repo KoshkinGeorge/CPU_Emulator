@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <memory>
+
 #include "Stack.hpp"
 #include "commands.hpp"
 #include "Preprocessor.hpp"
@@ -39,8 +41,8 @@ private:
     std::ofstream errstream;
 
     // commands 
-    std::map<std::string, Command> commands;
     std::map<std::string, unsigned> registers;
+    std::map<std::string, std::shared_ptr<Command>()> command_map;
 
     bool running = false;
 //  private methods
