@@ -4,71 +4,61 @@
 #include <map>
 #include <vector>
 
+#include "State.hpp"
 #include "my_funcs.hpp"
+
+
+class DivisionByZero : public std::exception
+{
+private:
+    std::string num1;
+
+public:
+    DivisionByZero(const char *num): num1(num) {}
+
+    const char* what() const noexcept override
+    {
+        return to_c_str(("Trying to devide ") + num1 + "by zero");
+    }
+};
+
+
+class ExpectedAnArgument : public std::exception
+{
+private:
+    std::string arg_name;
+
+public:
+    ExpectedAnArgument(const char *_arg_name):   arg_name(_arg_name) {}
+
+    const char* what() const noexcept override
+    {
+        return to_c_str(("Expected: ") + arg_name + "\nGot: Nothing");
+    }
+};
+
 
 class Command
 {
 public:
-    class DivisionByZero : public std::exception
+    virtual void exec(State& state, uint32_t arg) const
     {
-    private:
-        std::string num1;
-    
-    public:
-        DivisionByZero(const char *num): num1(num) {}
-    
-        const char* what() const noexcept override
-        {
-            return to_c_str(("Trying to devide ") + num1 + "by zero");
-        }
-    };
 
-
-    class ExpectedAnArgument : public std::exception
-    {
-    private:
-        std::string arg_name;
-    
-    public:
-        ExpectedAnArgument(const char *_arg_name):   arg_name(_arg_name) {}
-    
-        const char* what() const noexcept override
-        {
-            return to_c_str(("Expected: ") + arg_name + "\nGot: Nothing");
-        }
-    };
-
-public:
-    struct State
-    {
-    private:
-        using reg_map = std::map<std::string, unsigned>;
-
-    public:
-        Stack<unsigned> &stack;
-        reg_map &registers;
-        bool &running;
-        std::string next_lexeme;
-
-        State(Stack<unsigned> &s, reg_map &r, bool &run, const std::string &_next_lexeme): stack(s), registers(r), running(run), next_lexeme(_next_lexeme){}
-    };
-
-    static const std::string name;
-
-public:
-    virtual void exec(State& state) const;
+    }
 };
 
 
+class Pass: public Command
+{
+public:
+    void exec(State& state, uint32_t arg) const override;
+};
 
 
 class Begin: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
@@ -76,206 +66,156 @@ public:
 
 class End: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
 
 class Pop: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
 
 class Add: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
 
 class Sub: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
 
 class Mul: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
 
 class Div: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
 
 class Out: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
 
 class In: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
 
 class Push: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
 
 class PushR: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
 
 class PopR: public Command
 {
-protected:
-    static const std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
-/*
-class Begin: public Command
+class Label: public Command
 {
-private:
-    std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
-
-class Begin: public Command
+class Jmp: public Command
 {
-private:
-    std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
-class Begin: public Command
+class Jeq: public Command
 {
-private:
-    std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
-
-class Begin: public Command
+class Jne: public Command
 {
-private:
-    std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
-
-class Begin: public Command
+class Ja: public Command
 {
-private:
-    std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
-
-class Begin: public Command
+class Jae: public Command
 {
-private:
-    std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
-
-class Begin: public Command
+class Jb: public Command
 {
-private:
-    std::string name;
-
 public:
-    void exec(State& state) const override;
+    void exec(State& state, uint32_t arg) const override;
 };
 
 
-
-class Begin: public Command
+class Jbe: public Command
 {
-private:
-    std::string name;
-
 public:
-    void exec(State& state) const override;
-};*/
+    void exec(State& state, uint32_t arg) const override;
+};
+
+
+class Call: public Command
+{
+public:
+    void exec(State& state, uint32_t arg) const override;
+};
+
+
+class Ret: public Command
+{
+public:
+    void exec(State& state, uint32_t arg) const override;
+};

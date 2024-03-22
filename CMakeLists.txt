@@ -5,6 +5,7 @@ set(EMULATOR_INCLUDE_DIR "include")
 
 set(EMULATOR_INPUT_DIR "Programms")
 set(EMULATOR_OUTPUT_DIR "Output")
+set(EMULATOR_PROCESSED_DIR "Processed")
 
 configure_file(IO_dirs.hpp.in IO_dirs.hpp)
 

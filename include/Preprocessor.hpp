@@ -9,7 +9,9 @@
 class Preprocessor
 {
 private:
-    static std::map<std::string, unsigned> all_commands; // all the commands and amount of their arguments
+    std::map<std::string, unsigned> all_commands; // all the commands and amount of their arguments
+    std::map<std::string, uint32_t> codes;
+    uint32_t index = 0;
     std::ofstream processed;
 
 public:
@@ -24,17 +26,17 @@ public:
         
         const char* what() const noexcept override 
         {
-            return (std::string("Expected an argument for ") + lxm).c_str();
+            return to_c_str(std::string("Expected an argument for ") + lxm);
         }
     };
 
-    class UnknownCommand : public std::exception
+    class UnknownLexeme : public std::exception
     {
     private:
         std::string lxm{};
 
     public:
-        UnknownCommand(std::string lexeme)
+        UnknownLexeme(std::string lexeme)
             : lxm(lexeme) {}
         
         const char* what() const noexcept override 
@@ -42,6 +44,22 @@ public:
             return to_c_str(lxm + " is not defined");
         }
     };
+
+
+    class LexemeReserved : public std::exception
+    {
+    private:
+        std::string lxm{};
+    public:
+        LexemeReserved(std::string lexeme)
+            : lxm(lexeme) {}
+        
+        const char* what() const noexcept override 
+        {
+            return to_c_str(std::string("Lexeme \"") + lxm + "\" is already in use");
+        }
+    };
+
 
     class FileNotFound : public std::exception
     {
@@ -56,6 +74,8 @@ public:
             return to_c_str(std::string("File ") + file_name + " is not found");
         }
     };
+
+    Preprocessor();
 
 public:
     void process_file(std::string file_name);

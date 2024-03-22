@@ -27,7 +27,7 @@ public:
         
         const char* what() const noexcept override 
         {
-            return (std::string("Trying to get an element from the empty Stack...\n") + msg).c_str();
+            return to_c_str(std::string("Trying to get an element from the empty Stack...\n") + msg);
         }
     };
 
@@ -41,7 +41,7 @@ public:
         
         const char* what() const noexcept override 
         {
-            return (std::string("Memory for stack has exeeded...\n") + msg).c_str();
+            return to_c_str(std::string("Memory for stack has exeeded...\n") + msg);
         }
     };
 
@@ -61,9 +61,7 @@ public:
     //  default constractor
     Stack() = default;
 
-    Stack(size_t bytes_given) : max_size((bytes_given - 3 * sizeof(size_t)) / sizeof(node)) {}
-    // самому стеку надо 3 * sizeof(size_t) байт памяти + каждому
-    // элементу стека надо по sizeof(nod)
+    Stack(size_t bytes_given) : max_size((bytes_given) / sizeof(node)) {}
 
     // copying constractor
     Stack(const Stack &ins)

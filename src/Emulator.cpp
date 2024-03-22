@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <exception>
+#include <vector>
 #include <map>
 
 #include "Emulator.hpp"
@@ -14,74 +15,88 @@ using std::string;
 
 
 
-Emulator::Emulator(size_t bytes_for_stack):
+Emulator::Emulator(size_t bytes_for_stack, size_t recursion_deepth):
 outstream(std::string("../") + OUTPUT_DIR + "/out.txt"),
 errstream(std::string("../") + OUTPUT_DIR + "/log.txt"),
 preprocessor()
 {
-    // using command_data = std::pair<std::string, std::shared_ptr<Command>>;
-    // command_map =
-    // {
-    //     command_data("BEGIN", std::make_shared<Command>(new Begin())),
-    //     command_data("END", std::make_shared<Command>(new End())),
-    //     command_data("PUSH", std::make_shared<Command>(new Push())),
-    //     command_data("POP", std::make_shared<Command>(new Pop())),
-    //     command_data("PUSHR", std::make_shared<Command>(new PushR())),
-    //     command_data("POPR", std::make_shared<Command>(new PopR())),
-    //     command_data("ADD", std::make_shared<Command>(new Add())),
-    //     command_data("SUB", std::make_shared<Command>(new Sub())),
-    //     command_data("MUL", std::make_shared<Command>(new Mul())),
-    //     command_data("DIV", std::make_shared<Command>(new Div())),
-    //     command_data("OUT", std::make_shared<Command>(new Out())),
-    //     command_data("IN", std::make_shared<Command>(new In()))
-    // };
+    command_vec =
+    {
+        std::make_shared<Pass>(),
 
-    stack = Stack<unsigned>(bytes_for_stack);
+        std::make_shared<Begin>(),
+        std::make_shared<End>(),
+        std::make_shared<Push>(),
+        std::make_shared<Pop>(),
+        std::make_shared<PushR>(),
+        std::make_shared<PopR>(),
+        std::make_shared<Add>(),
+        std::make_shared<Sub>(),
+        std::make_shared<Mul>(),
+        std::make_shared<Div>(),
+        std::make_shared<Out>(),
+        std::make_shared<In>(),
 
-    registers["AX"] = 0;
-    registers["BX"] = 0;
-    registers["CX"] = 0;
-    registers["DX"] = 0;
-    registers["SP"] = 0;
-    registers["BP"] = 0;
-    registers["SI"] = 0;
-    registers["DI"] = 0;
-    registers["IP"] = 0;
-    registers["PC"] = 0;
+        std::make_shared<Label>(),
+
+        std::make_shared<Jmp>(),
+        std::make_shared<Jeq>(),
+        std::make_shared<Jne>(),
+        std::make_shared<Ja>(),
+        std::make_shared<Jae>(),
+        std::make_shared<Jb>(),
+        std::make_shared<Jbe>(),
+        std::make_shared<Call>(),
+        std::make_shared<Ret>(),
+    };
+
+    state.stack = Stack<unsigned>(bytes_for_stack);
+    state.call_stack = Stack<size_t>(sizeof(size_t) * recursion_deepth);
+
+    state.registers[10000] = 0;
+    state.registers[10001] = 0;
+    state.registers[10002] = 0;
+    state.registers[10003] = 0;
+    state.registers[10004] = 0;
+    state.registers[10005] = 0;
+    state.registers[10006] = 0;
+    state.registers[10007] = 0;
+    state.registers[10008] = 0;
+    state.registers[10009] = 0;
 }
 
 void Emulator::exec(std::string programm_name)
-{   
-    // errstream << "\n\n\n\n\t\t\t\t------- " << programm_name << "---------\n\n" << std::endl;
-    // outstream << "\n\n\n\n\t\t\t\t------- " << programm_name << "---------\n\n" << std::endl;
-    
-    // try
-    // {
-    //     std::string in_file = std::string("../") + std::string(INPUT_DIR) + "/" + programm_name + ".pcs";
-    //     std::ifstream programm(in_file);
-    //     if (programm.fail())
-    //     {
-    //         throw FileNotFound(in_file);
-    //     }
-    //     std::string command, arg;
-    //     Command::State state(stack, registers, running, arg);
-    //     state.registers = registers;
-    //     state.stack = stack;
-    //     state.running = running;
-    //     while (programm >> command)
-    //     {   
-    //         while (programm >> state.next_lexeme && state.next_lexeme != "&") {}
-    //         command_map[command]->exec(state);
-    //     }
-    // }
-    // catch(std::exception &e)
-    // {
-    //     errstream << "Run-Time error\n" << e.what() << "\nStop execution...\n";
-    // }
+{       
+    try
+    {
+        std::string in_file = std::string("../") + std::string(PROCESSED_DIR) + "/" + programm_name + ".pcs";
+        std::ifstream programm(in_file, std::ios::in | std::ios::binary);
+        if (programm.fail())
+        {
+            throw FileNotFound(in_file);
+        }
+        uint32_t command, arg;
+        std::vector<std::pair<uint32_t, uint32_t>> command_sequence;
+        while (programm.read((char *)&command, 4) && programm.read((char *)&arg, 4))
+        {   
+            command_sequence.push_back({command, arg});
+        }
+        for (state.cur_command = 0; state.cur_command < command_sequence.size(); state.cur_command++)
+        {
+            command = command_sequence[state.cur_command].first;
+            arg = command_sequence[state.cur_command].second;
+            command_vec[command]->exec(state, arg);
+            outstream << "Command:" << command << "\t\tArgument:" << arg << std::endl;
+        }
+    }
+    catch(std::exception &e)
+    {
+        errstream << "Run-Time error\n" << e.what() << "\nStop execution...\n" << std::flush;
+    }
     
 }
 
-void Emulator::preprocess(std::string programm_name)
+int Emulator::preprocess(std::string programm_name)
 {
     try
     {
@@ -89,8 +104,21 @@ void Emulator::preprocess(std::string programm_name)
     }  
     catch (std::exception &e)
     {
-        errstream << std::string("Preprocessor Error:\n") + std::string(e.what())  << "\nPreprocessing determinated";
-        return;
+        errstream << std::string("Preprocessor Error:\n") + std::string(e.what())
+        << "\nPreprocessing determinated" << std::flush;
+        return -1;
     }
-    outstream << programm_name << " has been processed correctly!\n";
+    outstream << programm_name << " has been processed correctly!\n" << std::flush;
+    return 0;
 }
+
+void Emulator::run(std::string programm_name)
+{
+    errstream << "\n\n\n\n\t\t\t\t------- " << programm_name << "---------\n\n" << std::endl;
+    outstream << "\n\n\n\n\t\t\t\t------- " << programm_name << "---------\n\n" << std::endl;
+
+    if (preprocess(programm_name) == 0)
+    {
+        exec(programm_name);
+    }
+} 

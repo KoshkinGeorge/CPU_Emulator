@@ -4,11 +4,14 @@
 #include <fstream>
 #include <map>
 #include <memory>
+#include <vector>
 
 #include "Stack.hpp"
 #include "commands.hpp"
 #include "Preprocessor.hpp"
 #include "my_funcs.hpp"
+#include "State.hpp"
+
 
 
 class Emulator
@@ -32,19 +35,15 @@ public:
 
 //  private fields
 private:
+    State state;
     Preprocessor preprocessor;
-    Stack<unsigned> stack;
-    std::string next_lexeme;
 
     std::ifstream programm; //  in.txt file
     std::ofstream outstream;
     std::ofstream errstream;
 
     // commands 
-    std::map<std::string, unsigned> registers;
-    // std::map<std::string, std::shared_ptr<Command>> command_map;
-
-    bool running = false;
+    std::vector<std::shared_ptr<Command>> command_vec;
 //  private methods
 private:
 
@@ -54,11 +53,13 @@ public:
 
 //  public methods
 public:
-    Emulator(size_t bytes_for_stack=1024);
+    Emulator(size_t bytes_for_stack = 1024, size_t recursion_deepth = 200);
 
     void exec(std::string file);
 
-    void preprocess(std::string file);
+    int preprocess(std::string file);
+
+    void run(std::string file);
 //  friends
 
 };

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Emulator.hpp"
+#include "commands.hpp"
 
 
 int main(int argc, const char* argv[])
@@ -11,8 +12,8 @@ int main(int argc, const char* argv[])
     std::cout << ">>> ";
     while (std::cin >> programm)
     {
-        em.preprocess(programm);
-        std::cout << '\n' << programm << " is preprocessed. View log.txt and out.txt for details...\n>>> ";
+        em.run(programm);
+        std::cout << ">>> ";
     } 
     
     return 0;

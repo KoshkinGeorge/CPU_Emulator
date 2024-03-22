@@ -8,6 +8,8 @@ add_library(Stack STATIC "${STACK_SRC_DIR}/Stack.cpp")
 
 target_include_directories(Stack PUBLIC
                             "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(Stack PUBLIC
+                            "../../include")
 
 if (TEST_ENABLED)
     project(StackTests)

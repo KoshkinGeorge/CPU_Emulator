@@ -1,0 +1,6 @@
+BEGIN
+
+PUSH                 5
+
+
+END

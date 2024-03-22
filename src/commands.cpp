@@ -5,35 +5,33 @@
 #include <sstream>
 #include "my_funcs.hpp"
 
-//  commands_0 - without args
 
-void Begin::exec(State &state) const
+void Pass::exec(State &state, uint32_t arg) const
+{
+    
+}
+
+void Begin::exec(State &state, uint32_t arg) const
 {
     state.running = true;
 }
-const std::string Begin::name = "BEGIN";
 
 
-
-void End::exec(State &state) const
+void End::exec(State &state, uint32_t arg) const
 {
     state.running = false;
 }
-const std::string End::name = "END";
 
 
-
-
-void Pop::exec(State &state) const
+void Pop::exec(State &state, uint32_t arg) const
 {
     //  all errors are being catched at the top level
     state.stack.pop(); 
 }
-const std::string Pop::name = "POP";
 
 
 
-void Add::exec(State &state) const
+void Add::exec(State &state, uint32_t arg) const
 {
     state.running = true;
     unsigned num1 = state.stack.get_top();
@@ -42,11 +40,10 @@ void Add::exec(State &state) const
     state.stack.push(num1);
     state.stack.push(num1 + num2);
 }
-const std::string Add::name = "ADD";
 
 
 
-void Sub::exec(State &state) const
+void Sub::exec(State &state, uint32_t arg) const
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -54,12 +51,11 @@ void Sub::exec(State &state) const
     state.stack.push(num1);
     state.stack.push(num1 - num2);
 }
-const std::string Sub::name = "SUB";
 
 
 
 
-void Mul::exec(State &state) const
+void Mul::exec(State &state, uint32_t arg) const
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -67,11 +63,10 @@ void Mul::exec(State &state) const
     state.stack.push(num1);
     state.stack.push(num1 * num2);
 }
-const std::string Mul::name = "MUL";
 
 
 
-void Div::exec(State &state) const
+void Div::exec(State &state, uint32_t arg) const
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -86,21 +81,19 @@ void Div::exec(State &state) const
     }
     state.stack.push(num1 / num2);
 }
-const std::string Div::name = "DIV";
 
 
 
-void Out::exec(State &state) const
+void Out::exec(State &state, uint32_t arg) const
 {
     unsigned num = state.stack.get_top();
     state.stack.pop();
     std::cout << "You got the number from the top: " << num << std::endl;
 }
-const std::string Out::name = "OUT";
 
 
 
-void In::exec(State &state) const
+void In::exec(State &state, uint32_t arg) const
 {
     unsigned num;
     if (!(std::cin >> num))
@@ -109,32 +102,123 @@ void In::exec(State &state) const
     }
     state.stack.push(num);
 }
-const std::string In::name = "IN";
 
 
 
-void Push::exec(State &state) const
+void Push::exec(State &state, uint32_t arg) const
 {
-    state.stack.push(std::move(std::stoul(state.next_lexeme)));
+    state.stack.push(arg);
 }
-const std::string Push::name = "PUSH";
 
 
 
-void PushR::exec(State &state) const
+void PushR::exec(State &state, uint32_t arg) const
 {
     // if user tries to get a value from random register - he would be given a value left there from previous programms
-    unsigned value = state.registers[state.next_lexeme]; 
+    unsigned value = state.registers[arg]; 
     state.stack.push(value);
 }
-const std::string PushR::name = "PUSHR";
 
 
 
-void PopR::exec(State &state) const
+void PopR::exec(State &state, uint32_t arg) const
 {
     unsigned value = state.stack.get_top();
     state.stack.pop();
-    state.registers[state.next_lexeme] = value;
+    state.registers[arg] = value;
 }
-const std::string PopR::name = "POPR";
+
+void Label::exec(State &state, uint32_t arg) const 
+{
+    state.labels[arg] = state.cur_command;
+}
+
+void Jmp::exec(State &state, uint32_t arg) const 
+{
+    state.cur_command = state.labels[arg];
+}
+
+void Jeq::exec(State &state, uint32_t arg) const 
+{
+    unsigned num1 = state.stack.get_top();
+    state.stack.pop();
+    unsigned num2 = state.stack.get_top();
+    state.stack.push(num1);
+    if (num1 == num2)
+    {
+        state.cur_command = state.labels[arg];
+    }
+}
+
+void Jne::exec(State &state, uint32_t arg) const 
+{
+    unsigned num1 = state.stack.get_top();
+    state.stack.pop();
+    unsigned num2 = state.stack.get_top();
+    state.stack.push(num1);
+    if (num1 != num2)
+    {
+        state.cur_command = state.labels[arg];
+    }
+}
+
+void Ja::exec(State &state, uint32_t arg) const 
+{
+    unsigned num1 = state.stack.get_top();
+    state.stack.pop();
+    unsigned num2 = state.stack.get_top();
+    state.stack.push(num1);
+    if (num1 > num2)
+    {
+        state.cur_command = state.labels[arg];
+    }
+}
+
+void Jae::exec(State &state, uint32_t arg) const 
+{
+    unsigned num1 = state.stack.get_top();
+    state.stack.pop();
+    unsigned num2 = state.stack.get_top();
+    state.stack.push(num1);
+    if (num1 >= num2)
+    {
+        state.cur_command = state.labels[arg];
+    }
+}
+
+void Jb::exec(State &state, uint32_t arg) const 
+{
+    unsigned num1 = state.stack.get_top();
+    state.stack.pop();
+    unsigned num2 = state.stack.get_top();
+    state.stack.push(num1);
+    if (num1 < num2)
+    {
+        state.cur_command = state.labels[arg];
+    }
+}
+
+void Jbe::exec(State &state, uint32_t arg) const 
+{
+    unsigned num1 = state.stack.get_top();
+    state.stack.pop();
+    unsigned num2 = state.stack.get_top();
+    state.stack.push(num1);
+    if (num1 <= num2)
+    {
+        state.cur_command = state.labels[arg];
+    }
+}
+
+
+void Call::exec(State &state, uint32_t arg) const 
+{
+    state.call_stack.push(state.cur_command);
+    state.cur_command = state.labels[arg];
+}
+
+void Ret::exec(State &state, uint32_t arg) const 
+{
+    state.cur_command = state.call_stack.get_top();
+    state.call_stack.pop();
+}

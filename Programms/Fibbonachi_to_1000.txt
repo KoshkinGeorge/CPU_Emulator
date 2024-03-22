@@ -1,0 +1,30 @@
+Printing all Fibbonachi numbers under 1000
+
+BEGIN
+
+PUSH 1
+PUSH 1
+PUSH 1000
+
+
+LABEL iteration
+    POP
+    ADD
+    PUSH 1000
+    JAE iteration
+
+POP
+POP
+PUSH 1
+
+LABEL iteration2
+    POP
+    OUT
+    PUSH 1
+    JNE iteration2
+
+POP
+OUT
+OUT
+
+END
