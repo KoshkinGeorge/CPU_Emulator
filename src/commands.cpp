@@ -128,10 +128,6 @@ void PopR::exec(State &state, uint32_t arg) const
     state.registers[arg] = value;
 }
 
-void Label::exec(State &state, uint32_t arg) const 
-{
-    state.labels[arg] = state.cur_command;
-}
 
 void Jmp::exec(State &state, uint32_t arg) const 
 {

@@ -38,7 +38,7 @@ preprocessor()
         std::make_shared<Out>(),
         std::make_shared<In>(),
         
-        std::make_shared<Label>(),
+        std::make_shared<Pass>(),
 
         std::make_shared<Jmp>(),
         std::make_shared<Jeq>(),
@@ -96,13 +96,13 @@ void Emulator::exec(std::string programm_name)
             {
                 EndIndex = line_counter;
             }
-            else if (command == 23)
+            else if (command == 23 || command == 13)
             {
-                state.labels[arg] == line_counter;
+                state.labels[arg] = line_counter;
             }
             line_counter++;
         }
-        outstream << "\n\n\n\n";
+        outstream << state.labels[20000] << " " << state.labels[20001];
         if (BeginIndex == 0 && EndIndex == 0)
         {
             throw NoMain("No BEGIN and END commands found");
@@ -110,9 +110,9 @@ void Emulator::exec(std::string programm_name)
 
         for (state.cur_command = BeginIndex; state.cur_command != EndIndex; state.cur_command++)
         {
-            outstream << "Command:" << command << "\t\tArgument:" << arg << std::endl;
             command = command_sequence[state.cur_command].first;
             arg = command_sequence[state.cur_command].second;
+            outstream << "Command:" << command << "\t\tArgument:" << arg << std::endl;
             command_vec[command]->exec(state, arg);
         }
     }

@@ -151,13 +151,6 @@ public:
 };
 
 
-class Label: public Command
-{
-public:
-    void exec(State& state, uint32_t arg) const override;
-};
-
-
 class Jmp: public Command
 {
 public:

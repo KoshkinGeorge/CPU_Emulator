@@ -1,0 +1,15 @@
+FUNCTION f1
+    PUSH 1
+    PUSH 5
+    RET
+
+FUNCTION f2
+    ADD
+    OUT
+    RET
+
+BEGIN
+    CALL f1
+
+    CALL f2
+END

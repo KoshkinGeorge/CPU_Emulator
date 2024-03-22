@@ -9,10 +9,12 @@ using std::string;
 
 
 int Preprocessor::compile_function(std::ifstream &programm, std::ofstream &compiled,
-        const std::string &start = "FUNCTION", const std::string &end = "RET")
+        const std::string &start, const std::string &end)
 {
+    auto startPos = programm.tellg();
     string command, arg;
     
+
     bool is_running = false;
     while(programm >> command)
     {
@@ -94,6 +96,7 @@ int Preprocessor::compile_function(std::ifstream &programm, std::ofstream &compi
             }
         }
     }
+    programm.seekg(startPos);
     return -1;
 }   
 
@@ -129,6 +132,8 @@ Preprocessor::Preprocessor()
         command_data("JBE",   1),
         command_data("CALL",  1),
         command_data("RET",   0),
+
+        command_data("FUNCTION", 1)
     };
 
     using code = std::pair<std::string, uint32_t>;
@@ -188,11 +193,11 @@ void Preprocessor::process_file(string file_name)
     processed = std::ofstream(string("../") + PROCESSED_DIR + "/" + file_name + ".pcs",
                               std::ios::out | std::ios::binary);
 
-    //while (compile_function(programm, processed, "FUNCTION", "RET"));
+    // compile_function(programm, processed, "FUNCTION", "RET");
 
     compile_function(programm, processed, "BEGIN", "END");
 
-    //while (compile_function(programm, processed, "FUNCTION", "RET"));
+    compile_function(programm, processed, "FUNCTION", "RET");
     
     programm.close();
     processed.close();

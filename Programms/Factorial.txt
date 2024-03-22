@@ -1,0 +1,18 @@
+FUNCTION FACTORIAL
+    LABEL BASE
+        RET
+
+    LABEL STEP
+        CALL FACTORIAL
+        OUT
+    
+    PUSH 1
+    JEQ BASE
+    POP
+    JMP STEP
+
+
+BEGIN
+    IN
+    CALL FACTORIAL
+END
