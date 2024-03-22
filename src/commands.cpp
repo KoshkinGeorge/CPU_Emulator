@@ -6,24 +6,24 @@
 #include "my_funcs.hpp"
 
 
-void Pass::exec(State &state, uint32_t arg) const
+void Pass::exec(State &state, int arg) const
 {
     
 }
 
-void Begin::exec(State &state, uint32_t arg) const
+void Begin::exec(State &state, int arg) const
 {
     state.running = true;
 }
 
 
-void End::exec(State &state, uint32_t arg) const
+void End::exec(State &state, int arg) const
 {
     state.running = false;
 }
 
 
-void Pop::exec(State &state, uint32_t arg) const
+void Pop::exec(State &state, int arg) const
 {
     //  all errors are being catched at the top level
     state.stack.pop(); 
@@ -31,7 +31,7 @@ void Pop::exec(State &state, uint32_t arg) const
 
 
 
-void Add::exec(State &state, uint32_t arg) const
+void Add::exec(State &state, int arg) const
 {
     state.running = true;
     unsigned num1 = state.stack.get_top();
@@ -43,7 +43,7 @@ void Add::exec(State &state, uint32_t arg) const
 
 
 
-void Sub::exec(State &state, uint32_t arg) const
+void Sub::exec(State &state, int arg) const
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -55,7 +55,7 @@ void Sub::exec(State &state, uint32_t arg) const
 
 
 
-void Mul::exec(State &state, uint32_t arg) const
+void Mul::exec(State &state, int arg) const
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -66,7 +66,7 @@ void Mul::exec(State &state, uint32_t arg) const
 
 
 
-void Div::exec(State &state, uint32_t arg) const
+void Div::exec(State &state, int arg) const
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -84,7 +84,7 @@ void Div::exec(State &state, uint32_t arg) const
 
 
 
-void Out::exec(State &state, uint32_t arg) const
+void Out::exec(State &state, int arg) const
 {
     unsigned num = state.stack.get_top();
     state.stack.pop();
@@ -93,7 +93,7 @@ void Out::exec(State &state, uint32_t arg) const
 
 
 
-void In::exec(State &state, uint32_t arg) const
+void In::exec(State &state, int arg) const
 {
     unsigned num;
     if (!(std::cin >> num))
@@ -105,14 +105,14 @@ void In::exec(State &state, uint32_t arg) const
 
 
 
-void Push::exec(State &state, uint32_t arg) const
+void Push::exec(State &state, int arg) const
 {
     state.stack.push(arg);
 }
 
 
 
-void PushR::exec(State &state, uint32_t arg) const
+void PushR::exec(State &state, int arg) const
 {
     // if user tries to get a value from random register - he would be given a value left there from previous programms
     unsigned value = state.registers[arg]; 
@@ -121,7 +121,7 @@ void PushR::exec(State &state, uint32_t arg) const
 
 
 
-void PopR::exec(State &state, uint32_t arg) const
+void PopR::exec(State &state, int arg) const
 {
     unsigned value = state.stack.get_top();
     state.stack.pop();
@@ -129,12 +129,12 @@ void PopR::exec(State &state, uint32_t arg) const
 }
 
 
-void Jmp::exec(State &state, uint32_t arg) const 
+void Jmp::exec(State &state, int arg) const 
 {
     state.cur_command = state.labels[arg];
 }
 
-void Jeq::exec(State &state, uint32_t arg) const 
+void Jeq::exec(State &state, int arg) const 
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -146,7 +146,7 @@ void Jeq::exec(State &state, uint32_t arg) const
     }
 }
 
-void Jne::exec(State &state, uint32_t arg) const 
+void Jne::exec(State &state, int arg) const 
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -158,7 +158,7 @@ void Jne::exec(State &state, uint32_t arg) const
     }
 }
 
-void Ja::exec(State &state, uint32_t arg) const 
+void Ja::exec(State &state, int arg) const 
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -170,7 +170,7 @@ void Ja::exec(State &state, uint32_t arg) const
     }
 }
 
-void Jae::exec(State &state, uint32_t arg) const 
+void Jae::exec(State &state, int arg) const 
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -182,7 +182,7 @@ void Jae::exec(State &state, uint32_t arg) const
     }
 }
 
-void Jb::exec(State &state, uint32_t arg) const 
+void Jb::exec(State &state, int arg) const 
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -194,7 +194,7 @@ void Jb::exec(State &state, uint32_t arg) const
     }
 }
 
-void Jbe::exec(State &state, uint32_t arg) const 
+void Jbe::exec(State &state, int arg) const 
 {
     unsigned num1 = state.stack.get_top();
     state.stack.pop();
@@ -207,14 +207,20 @@ void Jbe::exec(State &state, uint32_t arg) const
 }
 
 
-void Call::exec(State &state, uint32_t arg) const 
+void Call::exec(State &state, int arg) const 
 {
     state.call_stack.push(state.cur_command);
     state.cur_command = state.labels[arg];
 }
 
-void Ret::exec(State &state, uint32_t arg) const 
+void Ret::exec(State &state, int arg) const 
 {
     state.cur_command = state.call_stack.get_top();
     state.call_stack.pop();
+}
+
+void Save::exec(State &state, int arg) const
+{
+    unsigned value = state.stack.get_top();
+    state.registers[arg] = value;
 }

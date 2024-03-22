@@ -3,103 +3,10 @@
 #include <map>
 #include <fstream>
 #include "IO_dirs.hpp"
+#include "codes.hpp"
 
 
 using std::string;
-
-
-int Preprocessor::compile_function(std::ifstream &programm, std::ofstream &compiled,
-        const std::string &start, const std::string &end)
-{
-    auto startPos = programm.tellg();
-    string command, arg;
-    
-
-    bool is_running = false;
-    while(programm >> command)
-    {
-        if (is_running || command == start)
-        {
-            if (all_commands.count(command) != 1) // if this command does not exist
-            {
-                throw UnknownLexeme(command);
-            }
-
-            else if (command == start)
-            {
-                if (is_running == true)
-                {
-                    throw CoredFunction("No function inside function allowed!");
-                }
-                is_running = true;
-                compiled.write((char *)&codes[start], 4);
-
-                if (all_commands[start] == 1)
-                {
-                    programm >> arg;
-                    if (codes.count(arg) == 1)
-                    { // If this lexeme is already in use    
-                        throw LexemeReserved(arg);
-                    }
-                    codes.insert(std::pair<std::string, uint32_t>{arg, index++}); // adding new entity to the registry   
-                    compiled.write((char *)&codes[arg], 4);
-                }
-                else
-                {
-                    compiled.write((char *)&codes["NONE"], 4);
-                }
-            }
-
-            else if (command == end)
-            {
-                compiled.write((char *)&codes[end], 4);
-                compiled.write((char *)&codes["NONE"], 4);
-                return 0;
-            }
-            else
-            {
-                processed.write((char *)&codes[command], 4);
-                if (all_commands[command] == 1)
-                {
-                    if (!(programm >> arg))
-                    {
-                        throw NoArgumentGiven(command);
-                    }
-
-                    if (command == "LABEL")
-                    {
-                        if (codes.count(arg) == 1)
-                        { // If this lexeme is already in use    
-                            throw LexemeReserved(arg);
-                        }
-                        codes.insert(std::pair<std::string, uint32_t>{arg, index++}); // adding new entity to the registry
-                    }
-
-                    if (command == "PUSH")
-                    {
-                        uint32_t num = std::stoul(arg);
-                        processed.write((char *)&num, 4);
-                    }
-                    else if (codes.count(arg) == 1)
-                    {  
-                        processed.write((char *)&codes[arg], 4);
-                    }
-                    else
-                    {
-                        throw UnknownLexeme(arg);
-                    }
-                }
-                else
-                {
-                    processed.write((char *)&codes["NONE"], 4);
-                }
-            }
-        }
-    }
-    programm.seekg(startPos);
-    return -1;
-}   
-
 
 Preprocessor::Preprocessor()
 {   
@@ -133,50 +40,50 @@ Preprocessor::Preprocessor()
         command_data("CALL",  1),
         command_data("RET",   0),
 
-        command_data("FUNCTION", 1)
+        command_data("SAVE",  1),
     };
 
-    using code = std::pair<std::string, uint32_t>;
+    using code = std::pair<std::string, Codes>;
     codes = 
     {
-        code("NONE",  0),
-        code("BEGIN", 1),
-        code("END",   2),
-        code("PUSH",  3),
-        code("POP",   4),
-        code("PUSHR", 5),
-        code("POPR",  6),
-        code("ADD",   7),
-        code("SUB",   8),
-        code("MUL",   9),
-        code("DIV",   10),
-        code("OUT",   11),
-        code("IN",    12),
+        code("NONE",  Codes::none),
+        code("BEGIN", Codes::begin),
+        code("END",   Codes::end),
+        code("PUSH",  Codes::push),
+        code("POP",   Codes::pop),
+        code("PUSHR", Codes::pushr),
+        code("POPR",  Codes::popr),
+        code("ADD",   Codes::add),
+        code("SUB",   Codes::sub),
+        code("MUL",   Codes::mul),
+        code("DIV",   Codes::div),
+        code("OUT",   Codes::out),
+        code("IN",    Codes::in),
 
-        code("LABEL", 13),
+        code("LABEL", Codes::label),
 
-        code("JMP",   14),
-        code("JEQ",   15),
-        code("JNE",   16),
-        code("JA",    17),
-        code("JAE",   18),
-        code("JB",    19),
-        code("JBE",   20),
-        code("CALL",  21),
-        code("RET",   22),
+        code("JMP",   Codes::jmp),
+        code("JEQ",   Codes::jeq),
+        code("JNE",   Codes::jne),
+        code("JA",    Codes::ja),
+        code("JAE",   Codes::jae),
+        code("JB",    Codes::jb),
+        code("JBE",   Codes::jbe),
+        code("CALL",  Codes::call),
+        code("RET",   Codes::ret),
 
-        code("FUNCTION", 23),
+        code("SAVE",  Codes::save),
 
-        code("AX", 10000),
-        code("BX", 10001),
-        code("CX", 10002),
-        code("DX", 10003),
-        code("SP", 10004),
-        code("BP", 10005),
-        code("SI", 10006),
-        code("DI", 10007),
-        code("IP", 10008),
-        code("PC", 10009),
+        code("AX", Codes::ax),
+        code("BX", Codes::bx),
+        code("CX", Codes::cx),
+        code("DX", Codes::dx),
+        code("SP", Codes::sp),
+        code("BP", Codes::bp),
+        code("SI", Codes::si),
+        code("DI", Codes::di),
+        code("IP", Codes::ip),
+        code("PC", Codes::pc),
     };
     index = 20000; // from which indexes labels accounting starts
 }
@@ -190,15 +97,76 @@ void Preprocessor::process_file(string file_name)
         throw FileNotFound(programm_path);
     }
 
+    string command, arg;
+
+    while(programm >> command)
+    {
+        if (command == "LABEL")
+        {
+            programm >> arg;
+            if (codes.count(arg) == 1)
+            { // If this lexeme is already in use    
+                codes[arg] = Codes(index++);
+            }
+            else
+            {
+                codes.insert(std::pair<std::string, Codes>{arg, Codes(index++)}); // adding new entity to the registry
+            }
+        }
+    }
+    programm.close();
+    programm = std::ifstream(programm_path);
+    
+
     processed = std::ofstream(string("../") + PROCESSED_DIR + "/" + file_name + ".pcs",
                               std::ios::out | std::ios::binary);
 
-    // compile_function(programm, processed, "FUNCTION", "RET");
 
-    compile_function(programm, processed, "BEGIN", "END");
-
-    compile_function(programm, processed, "FUNCTION", "RET");
     
+    bool is_running = false;
+    while(programm >> command)
+    {
+        if (is_running || command == "BEGIN" || command == "LABEL")
+        {
+            if (command == "BEGIN" || command == "LABEL")
+            {
+                is_running = true;
+            }
+            if (all_commands.count(command) != 1) // if this command does not exist
+            {
+                throw UnknownLexeme(command);
+            }
+            else
+            {
+                processed.write((char *)&codes[command], sizeof(int));
+                if (all_commands[command] == 1)
+                {
+                    if (!(programm >> arg))
+                    {
+                        throw NoArgumentGiven(command);
+                    }
+
+                    if (command == "PUSH")
+                    {
+                        int num = std::stoul(arg);
+                        processed.write((char *)&num, sizeof(int));
+                    }
+                    else if (codes.count(arg) == 1)
+                    {  
+                        processed.write((char *)&codes[arg], sizeof(int));
+                    }
+                    else
+                    {
+                        throw UnknownLexeme(arg);
+                    }
+                }
+                else
+                {
+                    processed.write((char *)&codes["NONE"], sizeof(int));
+                }
+            }
+        }
+    }
     programm.close();
     processed.close();
 }

@@ -9,6 +9,7 @@
 #include "IO_dirs.hpp"
 #include "Preprocessor.hpp"
 #include "commands.hpp"
+#include "codes.hpp"
 #include <memory>
 
 using std::string;
@@ -22,7 +23,6 @@ preprocessor()
 {
     command_vec =
     {
-        // Pass commands - for alignment
         std::make_shared<Pass>(),
 
         std::make_shared<Begin>(),
@@ -37,7 +37,7 @@ preprocessor()
         std::make_shared<Div>(),
         std::make_shared<Out>(),
         std::make_shared<In>(),
-        
+
         std::make_shared<Pass>(),
 
         std::make_shared<Jmp>(),
@@ -49,26 +49,27 @@ preprocessor()
         std::make_shared<Jbe>(),
         std::make_shared<Call>(),
         std::make_shared<Ret>(),
+
+        std::make_shared<Save>(),
     };
 
     state.stack = Stack<unsigned>(bytes_for_stack);
     state.call_stack = Stack<size_t>(sizeof(size_t) * recursion_deepth);
 
-    state.registers[10000] = 0;
-    state.registers[10001] = 0;
-    state.registers[10002] = 0;
-    state.registers[10003] = 0;
-    state.registers[10004] = 0;
-    state.registers[10005] = 0;
-    state.registers[10006] = 0;
-    state.registers[10007] = 0;
-    state.registers[10008] = 0;
-    state.registers[10009] = 0;
+    state.registers[(int)Codes::ax] = 0;
+    state.registers[(int)Codes::bx] = 0;
+    state.registers[(int)Codes::cx] = 0;
+    state.registers[(int)Codes::dx] = 0;
+    state.registers[(int)Codes::sp] = 0;
+    state.registers[(int)Codes::bp] = 0;
+    state.registers[(int)Codes::si] = 0;
+    state.registers[(int)Codes::di] = 0;
+    state.registers[(int)Codes::ip] = 0;
+    state.registers[(int)Codes::pc] = 0;
 }
 
 void Emulator::exec(std::string programm_name)
-{       
-    unsigned BeginIndex = 0, EndIndex = 0;
+{
     try
     {
         std::string in_file = std::string("../") + std::string(PROCESSED_DIR) + "/" + programm_name + ".pcs";
@@ -78,49 +79,38 @@ void Emulator::exec(std::string programm_name)
             throw FileNotFound(in_file);
         }
 
-        uint32_t command, arg;
-        std::vector<std::pair<uint32_t, uint32_t>> command_sequence;
+        int command, arg;
+        std::vector<std::pair<int, int>> command_sequence;
         unsigned line_counter = 0;
+        unsigned BEGIN_index = 0;
 
-        while (programm.read((char *)&command, 4) && programm.read((char *)&arg, 4))
+        while (programm.read((char *)&command, sizeof(int)) && programm.read((char *)&arg, sizeof(int)))
         {   
-            outstream << "Command:" << command << "\t\tArgument:" << arg << std::endl;
+            if (command == (int)Codes::begin)
+            {
+                BEGIN_index = line_counter;
+            }
+            if (command == (int)Codes::label)
+            {
+                state.labels.insert(std::pair<int, unsigned>{arg, line_counter});
+            }
             command_sequence.push_back({command, arg});
-
-            // running over the code and seeking avery function declaration
-            if (command == 1)
-            {
-                BeginIndex = line_counter;
-            }
-            else if (command == 2)
-            {
-                EndIndex = line_counter;
-            }
-            else if (command == 23 || command == 13)
-            {
-                state.labels[arg] = line_counter;
-            }
             line_counter++;
         }
-        outstream << state.labels[20000] << " " << state.labels[20001];
-        if (BeginIndex == 0 && EndIndex == 0)
-        {
-            throw NoMain("No BEGIN and END commands found");
-        }
 
-        for (state.cur_command = BeginIndex; state.cur_command != EndIndex; state.cur_command++)
+        for (state.cur_command = BEGIN_index; state.cur_command < command_sequence.size(); state.cur_command++)
         {
             command = command_sequence[state.cur_command].first;
             arg = command_sequence[state.cur_command].second;
-            outstream << "Command:" << command << "\t\tArgument:" << arg << std::endl;
             command_vec[command]->exec(state, arg);
+            outstream << "Command:" << command << "\t\tArgument:" << arg << std::endl;
         }
     }
     catch(std::exception &e)
     {
         errstream << "Run-Time error\n" << e.what() << "\nStop execution...\n" << std::flush;
     }
-    
+    clear();   
 }
 
 int Emulator::preprocess(std::string programm_name)
@@ -149,3 +139,17 @@ void Emulator::run(std::string programm_name)
         exec(programm_name);
     }
 } 
+
+// cleaning everythong left from the previous programm
+void Emulator::clear()
+{
+    unsigned index = 20000;
+    while (state.labels.count(index) == 1)
+    {
+        state.labels.erase(index);
+    }
+    state.stack.clear();
+} 
+
+
+

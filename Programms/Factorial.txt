@@ -1,18 +1,32 @@
-FUNCTION FACTORIAL
+LABEL FACTORIAL
+    PUSH 1
+    JEQ BASE
+    PUSHR BX
+    SUB
+    SAVE BX
+    PUSHR AX
+    MUL
+    SAVE AX
+    PUSHR BX
+    SAVE BX
+
+    JMP STEP
+
     LABEL BASE
+        POP
         RET
 
     LABEL STEP
         CALL FACTORIAL
-        OUT
-    
-    PUSH 1
-    JEQ BASE
-    POP
-    JMP STEP
+        RET
+        
 
 
 BEGIN
     IN
+    SAVE AX
+    SAVE BX
     CALL FACTORIAL
+    PUSHR AX
+    OUT
 END

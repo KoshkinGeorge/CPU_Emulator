@@ -2,8 +2,429 @@
 
 
 
+				------- Test---------
+
+
+Test has been processed correctly!
+Command:1		Argument:0
+Command:3		Argument:5
+Command:23		Argument:10000
+Command:3		Argument:10
+Command:23		Argument:10001
+Command:5		Argument:10000
+Command:5		Argument:10001
+Command:9		Argument:0
+Command:11		Argument:0
+Command:2		Argument:0
+
+
+
+
+				------- Rubbish---------
+
+
+
+
+
+
+				------- Factorial---------
+
+
+Factorial has been processed correctly!
+Command:1		Argument:0
+Command:12		Argument:0
+Command:23		Argument:10000
+Command:23		Argument:10001
+Command:21		Argument:20000
+Command:3		Argument:1
+Command:15		Argument:20001
+Command:5		Argument:10001
+Command:8		Argument:0
+Command:23		Argument:10001
+Command:5		Argument:10000
+Command:9		Argument:0
+Command:23		Argument:10000
+Command:5		Argument:10001
+Command:23		Argument:10001
+Command:14		Argument:20002
+Command:21		Argument:20000
+Command:3		Argument:1
+Command:15		Argument:20001
+Command:5		Argument:10001
+Command:8		Argument:0
+Command:23		Argument:10001
+Command:5		Argument:10000
+Command:9		Argument:0
+Command:23		Argument:10000
+Command:5		Argument:10001
+Command:23		Argument:10001
+Command:14		Argument:20002
+Command:21		Argument:20000
+Command:3		Argument:1
+Command:15		Argument:20001
+Command:5		Argument:10001
+Command:8		Argument:0
+Command:23		Argument:10001
+Command:5		Argument:10000
+Command:9		Argument:0
+Command:23		Argument:10000
+Command:5		Argument:10001
+Command:23		Argument:10001
+Command:14		Argument:20002
+Command:21		Argument:20000
+Command:3		Argument:1
+Command:15		Argument:20001
+Command:5		Argument:10001
+Command:8		Argument:0
+Command:23		Argument:10001
+Command:5		Argument:10000
+Command:9		Argument:0
+Command:23		Argument:10000
+Command:5		Argument:10001
+Command:23		Argument:10001
+Command:14		Argument:20002
+Command:21		Argument:20000
+Command:3		Argument:1
+Command:15		Argument:20001
+Command:5		Argument:10001
+Command:8		Argument:0
+Command:23		Argument:10001
+Command:5		Argument:10000
+Command:9		Argument:0
+Command:23		Argument:10000
+Command:5		Argument:10001
+Command:23		Argument:10001
+Command:14		Argument:20002
+Command:21		Argument:20000
+Command:3		Argument:1
+Command:15		Argument:20001
+Command:5		Argument:10001
+Command:8		Argument:0
+Command:23		Argument:10001
+Command:5		Argument:10000
+Command:9		Argument:0
+Command:23		Argument:10000
+Command:5		Argument:10001
+Command:23		Argument:10001
+Command:14		Argument:20002
+Command:21		Argument:20000
+Command:3		Argument:1
+Command:15		Argument:20001
+Command:4		Argument:0
+Command:22		Argument:0
+Command:22		Argument:0
+Command:22		Argument:0
+Command:22		Argument:0
+Command:22		Argument:0
+Command:22		Argument:0
+Command:22		Argument:0
+Command:5		Argument:10000
+Command:11		Argument:0
+Command:2		Argument:0
+
+
+
+
 				------- Fibbonachi---------
 
 
 Fibbonachi has been processed correctly!
-0 0
+Command:1		Argument:0
+Command:3		Argument:1
+Command:3		Argument:1
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:7		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:2		Argument:0
+
+
+
+
+				------- Fibbonachi_to_1000---------
+
+
+Fibbonachi_to_1000 has been processed correctly!
+Command:1		Argument:0
+Command:21		Argument:20004
+Command:3		Argument:1
+Command:3		Argument:1
+Command:21		Argument:20003
+Command:3		Argument:1000
+Command:22		Argument:0
+Command:22		Argument:0
+Command:13		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:7		Argument:0
+Command:3		Argument:1000
+Command:18		Argument:20005
+Command:4		Argument:0
+Command:4		Argument:0
+Command:3		Argument:1
+Command:13		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:3		Argument:1
+Command:16		Argument:20006
+Command:4		Argument:0
+Command:11		Argument:0
+Command:11		Argument:0
+Command:2		Argument:0
+
+
+
+
+				------- Factorial---------
+
+
+Factorial has been processed correctly!
+Command:1		Argument:0
+Command:12		Argument:0
+Command:23		Argument:10000
+Command:23		Argument:10001
+Command:21		Argument:20007
+Command:3		Argument:1
+Command:15		Argument:20008
+Command:5		Argument:10001
+Command:8		Argument:0
+Command:23		Argument:10001
+Command:5		Argument:10000
+Command:9		Argument:0
+Command:23		Argument:10000
+Command:5		Argument:10001
+Command:23		Argument:10001
+Command:14		Argument:20009
+Command:21		Argument:20007
+Command:3		Argument:1
+Command:15		Argument:20008
+Command:5		Argument:10001
+Command:8		Argument:0
+Command:23		Argument:10001
+Command:5		Argument:10000
+Command:9		Argument:0
+Command:23		Argument:10000
+Command:5		Argument:10001
+Command:23		Argument:10001
+Command:14		Argument:20009
+Command:21		Argument:20007
+Command:3		Argument:1
+Command:15		Argument:20008
+Command:5		Argument:10001
+Command:8		Argument:0
+Command:23		Argument:10001
+Command:5		Argument:10000
+Command:9		Argument:0
+Command:23		Argument:10000
+Command:5		Argument:10001
+Command:23		Argument:10001
+Command:14		Argument:20009
+Command:21		Argument:20007
+Command:3		Argument:1
+Command:15		Argument:20008
+Command:5		Argument:10001
+Command:8		Argument:0
+Command:23		Argument:10001
+Command:5		Argument:10000
+Command:9		Argument:0
+Command:23		Argument:10000
+Command:5		Argument:10001
+Command:23		Argument:10001
+Command:14		Argument:20009
+Command:21		Argument:20007
+Command:3		Argument:1
+Command:15		Argument:20008
+Command:4		Argument:0
+Command:22		Argument:0
+Command:22		Argument:0
+Command:22		Argument:0
+Command:22		Argument:0
+Command:22		Argument:0
+Command:5		Argument:10000
+Command:11		Argument:0
+Command:2		Argument:0

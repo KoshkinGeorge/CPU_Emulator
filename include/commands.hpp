@@ -41,7 +41,7 @@ public:
 class Command
 {
 public:
-    virtual void exec(State& state, uint32_t arg) const
+    virtual void exec(State& state, int arg) const
     {
 
     }
@@ -51,14 +51,14 @@ public:
 class Pass: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
 class Begin: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
@@ -67,7 +67,7 @@ public:
 class End: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
@@ -75,7 +75,7 @@ public:
 class Pop: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
@@ -83,7 +83,7 @@ public:
 class Add: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
@@ -91,7 +91,7 @@ public:
 class Sub: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
@@ -99,7 +99,7 @@ public:
 class Mul: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
@@ -107,7 +107,7 @@ public:
 class Div: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
@@ -115,7 +115,7 @@ public:
 class Out: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
@@ -123,7 +123,7 @@ public:
 class In: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
@@ -131,7 +131,7 @@ public:
 class Push: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
@@ -139,7 +139,7 @@ public:
 class PushR: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
@@ -147,68 +147,75 @@ public:
 class PopR: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
 class Jmp: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
 class Jeq: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
 class Jne: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
 class Ja: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
 class Jae: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
 class Jb: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
 class Jbe: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
 class Call: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
 };
 
 
 class Ret: public Command
 {
 public:
-    void exec(State& state, uint32_t arg) const override;
+    void exec(State& state, int arg) const override;
+};
+
+
+class Save: public Command
+{
+public:
+    void exec(State& state, int arg) const override;
 };

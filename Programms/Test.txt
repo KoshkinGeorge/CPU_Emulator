@@ -1,6 +1,13 @@
 BEGIN
 
-PUSH                 5
+PUSH    5
+SAVE AX
+PUSH 10
+SAVE BX
+PUSHR AX
+PUSHR BX
+MUL
+OUT
 
 
 END

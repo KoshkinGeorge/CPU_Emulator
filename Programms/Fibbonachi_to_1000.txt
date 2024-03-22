@@ -1,10 +1,21 @@
 Printing all Fibbonachi numbers under 1000
 
-BEGIN
+LABEL SET_1000
+    PUSH 1000
+    RET
 
-PUSH 1
-PUSH 1
-PUSH 1000
+
+LABEL SET
+    PUSH 1
+    PUSH 1
+    CALL SET_1000
+    RET
+
+
+BEGIN
+CALL SET
+
+
 
 
 LABEL iteration
