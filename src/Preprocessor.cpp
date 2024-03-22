@@ -7,6 +7,97 @@
 
 using std::string;
 
+
+int Preprocessor::compile_function(std::ifstream &programm, std::ofstream &compiled,
+        const std::string &start = "FUNCTION", const std::string &end = "RET")
+{
+    string command, arg;
+    
+    bool is_running = false;
+    while(programm >> command)
+    {
+        if (is_running || command == start)
+        {
+            if (all_commands.count(command) != 1) // if this command does not exist
+            {
+                throw UnknownLexeme(command);
+            }
+
+            else if (command == start)
+            {
+                if (is_running == true)
+                {
+                    throw CoredFunction("No function inside function allowed!");
+                }
+                is_running = true;
+                compiled.write((char *)&codes[start], 4);
+
+                if (all_commands[start] == 1)
+                {
+                    programm >> arg;
+                    if (codes.count(arg) == 1)
+                    { // If this lexeme is already in use    
+                        throw LexemeReserved(arg);
+                    }
+                    codes.insert(std::pair<std::string, uint32_t>{arg, index++}); // adding new entity to the registry   
+                    compiled.write((char *)&codes[arg], 4);
+                }
+                else
+                {
+                    compiled.write((char *)&codes["NONE"], 4);
+                }
+            }
+
+            else if (command == end)
+            {
+                compiled.write((char *)&codes[end], 4);
+                compiled.write((char *)&codes["NONE"], 4);
+                return 0;
+            }
+            else
+            {
+                processed.write((char *)&codes[command], 4);
+                if (all_commands[command] == 1)
+                {
+                    if (!(programm >> arg))
+                    {
+                        throw NoArgumentGiven(command);
+                    }
+
+                    if (command == "LABEL")
+                    {
+                        if (codes.count(arg) == 1)
+                        { // If this lexeme is already in use    
+                            throw LexemeReserved(arg);
+                        }
+                        codes.insert(std::pair<std::string, uint32_t>{arg, index++}); // adding new entity to the registry
+                    }
+
+                    if (command == "PUSH")
+                    {
+                        uint32_t num = std::stoul(arg);
+                        processed.write((char *)&num, 4);
+                    }
+                    else if (codes.count(arg) == 1)
+                    {  
+                        processed.write((char *)&codes[arg], 4);
+                    }
+                    else
+                    {
+                        throw UnknownLexeme(arg);
+                    }
+                }
+                else
+                {
+                    processed.write((char *)&codes["NONE"], 4);
+                }
+            }
+        }
+    }
+    return -1;
+}   
+
+
 Preprocessor::Preprocessor()
 {   
     using command_data = std::pair<string, unsigned>;
@@ -69,6 +160,8 @@ Preprocessor::Preprocessor()
         code("CALL",  21),
         code("RET",   22),
 
+        code("FUNCTION", 23),
+
         code("AX", 10000),
         code("BX", 10001),
         code("CX", 10002),
@@ -95,61 +188,12 @@ void Preprocessor::process_file(string file_name)
     processed = std::ofstream(string("../") + PROCESSED_DIR + "/" + file_name + ".pcs",
                               std::ios::out | std::ios::binary);
 
-    string command, arg;
+    //while (compile_function(programm, processed, "FUNCTION", "RET"));
+
+    compile_function(programm, processed, "BEGIN", "END");
+
+    //while (compile_function(programm, processed, "FUNCTION", "RET"));
     
-    bool is_running = false;
-    while(programm >> command)
-    {
-        if (is_running || command == "BEGIN")
-        {
-            if (command == "BEGIN")
-            {
-                is_running = true;
-            }
-            if (all_commands.count(command) != 1) // if this command does not exist
-            {
-                throw UnknownLexeme(command);
-            }
-            else
-            {
-                processed.write((char *)&codes[command], 4);
-                if (all_commands[command] == 1)
-                {
-                    if (!(programm >> arg))
-                    {
-                        throw NoArgumentGiven(command);
-                    }
-
-                    if (command == "LABEL")
-                    {
-                        if (codes.count(arg) == 1)
-                        { // If this lexeme is already in use    
-                            throw LexemeReserved(arg);
-                        }
-                        codes.insert(std::pair<std::string, uint32_t>{arg, index++}); // adding new entity to the registry
-                    }
-
-                    if (command == "PUSH")
-                    {
-                        uint32_t num = std::stoul(arg);
-                        processed.write((char *)&num, 4);
-                    }
-                    else if (codes.count(arg) == 1)
-                    {  
-                        processed.write((char *)&codes[arg], 4);
-                    }
-                    else
-                    {
-                        throw UnknownLexeme(arg);
-                    }
-                }
-                else
-                {
-                    processed.write((char *)&codes["NONE"], 4);
-                }
-            }
-        }
-    }
     programm.close();
     processed.close();
 }

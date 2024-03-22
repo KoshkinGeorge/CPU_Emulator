@@ -22,6 +22,7 @@ preprocessor()
 {
     command_vec =
     {
+        // Pass commands - for alignment
         std::make_shared<Pass>(),
 
         std::make_shared<Begin>(),
@@ -36,7 +37,7 @@ preprocessor()
         std::make_shared<Div>(),
         std::make_shared<Out>(),
         std::make_shared<In>(),
-
+        
         std::make_shared<Label>(),
 
         std::make_shared<Jmp>(),
@@ -67,6 +68,7 @@ preprocessor()
 
 void Emulator::exec(std::string programm_name)
 {       
+    unsigned BeginIndex = 0, EndIndex = 0;
     try
     {
         std::string in_file = std::string("../") + std::string(PROCESSED_DIR) + "/" + programm_name + ".pcs";
@@ -75,18 +77,43 @@ void Emulator::exec(std::string programm_name)
         {
             throw FileNotFound(in_file);
         }
+
         uint32_t command, arg;
         std::vector<std::pair<uint32_t, uint32_t>> command_sequence;
+        unsigned line_counter = 0;
+
         while (programm.read((char *)&command, 4) && programm.read((char *)&arg, 4))
         {   
+            outstream << "Command:" << command << "\t\tArgument:" << arg << std::endl;
             command_sequence.push_back({command, arg});
+
+            // running over the code and seeking avery function declaration
+            if (command == 1)
+            {
+                BeginIndex = line_counter;
+            }
+            else if (command == 2)
+            {
+                EndIndex = line_counter;
+            }
+            else if (command == 23)
+            {
+                state.labels[arg] == line_counter;
+            }
+            line_counter++;
         }
-        for (state.cur_command = 0; state.cur_command < command_sequence.size(); state.cur_command++)
+        outstream << "\n\n\n\n";
+        if (BeginIndex == 0 && EndIndex == 0)
         {
+            throw NoMain("No BEGIN and END commands found");
+        }
+
+        for (state.cur_command = BeginIndex; state.cur_command != EndIndex; state.cur_command++)
+        {
+            outstream << "Command:" << command << "\t\tArgument:" << arg << std::endl;
             command = command_sequence[state.cur_command].first;
             arg = command_sequence[state.cur_command].second;
             command_vec[command]->exec(state, arg);
-            outstream << "Command:" << command << "\t\tArgument:" << arg << std::endl;
         }
     }
     catch(std::exception &e)

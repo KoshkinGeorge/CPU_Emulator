@@ -33,6 +33,20 @@ public:
         }
     };
 
+    class NoMain : public std::exception
+    {
+    private:
+        std::string mes{};
+    public:
+        NoMain(std::string _mes)
+            :mes(_mes) {}
+        
+        const char* what() const noexcept override 
+        {
+            return to_c_str(mes);
+        }
+    };
+
 //  private fields
 private:
     State state;
@@ -46,7 +60,6 @@ private:
     std::vector<std::shared_ptr<Command>> command_vec;
 //  private methods
 private:
-
 //  public fields
 public:
     

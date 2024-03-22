@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
 #include "IO_dirs.hpp"
 #include <fstream>
 #include "my_funcs.hpp"
@@ -13,6 +14,10 @@ private:
     std::map<std::string, uint32_t> codes;
     uint32_t index = 0;
     std::ofstream processed;
+
+private:
+    int compile_function(std::ifstream &programm, std::ofstream &compiled,
+        const std::string &start, const std::string &end);
 
 public:
 
@@ -60,6 +65,19 @@ public:
         }
     };
 
+    class CoredFunction : public std::exception
+    {
+    private:
+        std::string mes{};
+    public:
+        CoredFunction(std::string _mes)
+            : mes(_mes) {}
+        
+        const char* what() const noexcept override 
+        {
+            return to_c_str(mes);
+        }
+    };
 
     class FileNotFound : public std::exception
     {
